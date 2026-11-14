@@ -65,5 +65,5 @@ palette and performance limits and tested on hardware/emulators.
 
 This pass does not overwrite upstream graphics or change the pinned submodule.
 The next step after the audit is to inspect representative sprite sheets and
-palettes, then compare the optional palette-grade candidates in-game before deciding
-  whether any should become an actual asset change.
+palettes, then compare optional palette-grade candidates in-game before deciding
+whether any should become an actual asset change.
