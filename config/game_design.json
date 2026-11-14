@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "project": {
+    "name": "Hoenn-Sinnoh Ultimate Randomizer",
+    "status": "foundation"
+  },
+  "engine": {
+    "name": "pokeemerald-expansion",
+    "repository": "https://github.com/rh-hideout/pokeemerald-expansion",
+    "revision": null,
+    "revision_policy": "Pin an exact commit before engine integration or release."
+  },
+  "world": {
+    "regions": [
+      {
+        "id": "hoenn",
+        "role": "main_adventure"
+      },
+      {
+        "id": "sinnoh",
+        "role": "main_adventure"
+      }
+    ],
+    "both_regions_available_in_main_adventure": true,
+    "inter_region_travel_required": true
+  },
+  "progression": {
+    "gym_scaling": {
+      "enabled": true,
+      "mode": "player_progression",
+      "scale_major_trainers": true,
+      "notes": "Exact level curves and progression milestones must be defined after the Gym roster and engine flags are inventoried."
+    }
+  },
+  "randomization": {
+    "seed": null,
+    "starters": {
+      "enabled": true,
+      "selection": "random",
+      "pool": "all_supported_eligible_species"
+    },
+    "legendary_encounters": {
+      "enabled": true,
+      "placement": "any_eligible_world_location",
+      "respect_map_and_encounter_constraints": true
+    }
+  },
+  "pokemon": {
+    "target_coverage": "all_species_and_forms_supported_by_pinned_engine_revision",
+    "mega_evolution": {
+      "enabled": true,
+      "reuse_engine_support_when_available": true
+    }
+  },
+  "validation": {
+    "require_deterministic_seeded_output": true,
+    "reject_unknown_species_or_forms": true,
+    "verify_region_map_connectivity": true,
+    "verify_progression_reachability": true,
+    "verify_encounter_table_validity": true
+  },
+  "distribution": {
+    "format": "patch",
+    "include_copyrighted_base_rom": false
+  }
+}
