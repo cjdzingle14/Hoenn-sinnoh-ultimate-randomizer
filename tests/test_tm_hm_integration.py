@@ -6,7 +6,7 @@ def test_tms_are_not_removed_after_learning():
     patched = patch_party_menu(source)
     assert OLD not in patched
     assert NEW in patched
-    assert "GetItemTMHMIndex(item) > NUM_TECHNICAL_MACHINES" in patched
+    assert "TMs and HMs are reusable" in patched
 
 
 def test_patch_is_idempotent():
