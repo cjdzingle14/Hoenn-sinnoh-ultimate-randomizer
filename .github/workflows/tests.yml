@@ -1,4 +1,4 @@
-name: Project tests
+name: Project tests and engine baseline
 
 on:
   push:
@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  test:
+  randomizer-tests:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
@@ -21,3 +21,23 @@ jobs:
         run: python -m pip install --upgrade pip pytest
       - name: Run project tests
         run: python -m pytest -q
+
+  engine-baseline:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 30
+    steps:
+      - name: Check out repository and pinned engine submodule
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - name: Install pokeemerald-expansion build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential binutils-arm-none-eabi gcc-arm-none-eabi libnewlib-arm-none-eabi git libpng-dev python3
+      - name: Record pinned engine revision
+        run: |
+          git -C vendor/pokeemerald-expansion rev-parse HEAD
+          arm-none-eabi-gcc --version
+      - name: Build unmodified upstream engine
+        working-directory: vendor/pokeemerald-expansion
+        run: make -j2
