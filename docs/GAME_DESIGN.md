@@ -32,6 +32,11 @@ The intended Hoenn locations are Petalburg Woods, Granite Cave, Fiery Path, Mt. 
 
 Mega Evolution is a feature requirement. Use only mechanics, items, species forms, and battle hooks supported by the selected pokeemerald-expansion revision. Verify every Mega-capable species, stone, ability, and form transition against that revision; do not assume upstream APIs remain stable.
 
+
+## Pokémon Center healing dialogue
+
+Pokémon Center healing should be streamlined: Nurse Joy does not display the usual greeting, introductory questions, or pre-healing dialogue. The healing process starts immediately when the player uses the counter. After the party has finished healing, Nurse Joy displays one short confirmation that the Pokémon are fully healed. Preserve the existing healing effect, sound, animation, and any required control flow; remove only the unnecessary dialogue. Apply consistently to every Pokémon Center in both regions.
+
 ## Randomizer reproducibility
 
 A seed plus versioned settings must reproduce the same randomized result. Independent deterministic streams are used for regional starters, wild encounters, legendary placement, and each grotto so adding a random draw to one subsystem does not reshuffle all others.
