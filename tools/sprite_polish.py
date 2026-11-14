@@ -89,7 +89,7 @@ def grade_palette_file(source: Path, destination: Path, saturation: float = 1.08
     destination.parent.mkdir(parents=True, exist_ok=True)
     output = ["JASC-PAL", "0100", str(declared)]
     output.extend(f"{r} {g} {b}" for r, g, b in graded)
-    destination.write_text("\\n".join(output) + "\\n", encoding="utf-8")
+    destination.write_text("\n".join(output) + "\n", encoding="utf-8")
 
 
 def make_palette_previews(root: Path, destination: Path) -> int:
