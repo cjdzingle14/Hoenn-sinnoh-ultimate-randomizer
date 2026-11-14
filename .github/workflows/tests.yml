@@ -41,3 +41,10 @@ jobs:
       - name: Build unmodified upstream engine
         working-directory: vendor/pokeemerald-expansion
         run: make -j2
+      - name: Upload bootable engine baseline ROM
+        uses: actions/upload-artifact@v4
+        with:
+          name: hoenn-sinnoh-engine-baseline
+          path: vendor/pokeemerald-expansion/pokeemerald.gba
+          if-no-files-found: error
+          retention-days: 14
