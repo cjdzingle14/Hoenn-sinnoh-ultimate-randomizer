@@ -64,3 +64,10 @@
 - Test randomizer seed reproducibility.
 - Document known issues and legal build requirements.
 - Produce a patch workflow; do not distribute a copyrighted base ROM.
+
+## Phase 8 — Pokémon Center quality-of-life
+
+- [ ] Audit the pinned engine's Pokémon Center nurse scripts and shared healing flow.
+- [ ] Remove greeting, questions, and all pre-heal dialogue while preserving the normal healing sequence and required scripts.
+- [ ] Show one brief Nurse Joy confirmation only after healing has completed.
+- [ ] Apply consistently to every Pokémon Center map and test party healing, eggs, sound/animation, and repeat visits.
