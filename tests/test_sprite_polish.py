@@ -2,7 +2,7 @@ from pathlib import Path
 
 from PIL import Image
 
-from tools.sprite_polish import audit, gba_sprite_files, make_previews, palette_report
+from tools.sprite_polish import audit, gba_sprite_files, make_palette_previews, make_previews, palette_report
 
 
 def test_palette_report_counts_visible_colors_and_alpha(tmp_path: Path):
@@ -56,3 +56,26 @@ def test_preview_uses_nearest_neighbor_and_keeps_source_unchanged(tmp_path: Path
     assert preview.getpixel((0, 0)) == (255, 0, 0, 255)
     assert preview.getpixel((5, 2)) == (0, 0, 255, 255)
     assert asset.read_bytes() == original
+
+
+
+def test_palette_preview_preserves_slot_zero_and_writes_valid_jasc(tmp_path: Path):
+    source = tmp_path / "pokemon"
+    source.mkdir()
+    palette = source / "normal_gba.pal"
+    palette.write_text(
+        "JASC-PAL\\n0100\\n3\\n"
+        "255 0 255\\n"
+        "120 100 80\\n"
+        "40 60 80\\n",
+        encoding="utf-8",
+    )
+
+    output = tmp_path / "graded"
+    assert make_palette_previews(source, output) == 1
+    lines = (output / "normal_gba.pal").read_text(encoding="utf-8").splitlines()
+
+    assert lines[:3] == ["JASC-PAL", "0100", "3"]
+    assert lines[3] == "255 0 255"
+    assert len(lines) == 6
+    assert lines[4] != "120 100 80"
