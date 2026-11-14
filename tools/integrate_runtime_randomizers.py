@@ -12,6 +12,8 @@ FLAG_PATCHES = {
         "#define FLAG_RANDOMIZER_DISABLE_WILD                              0x493 // Cleared by default: wild randomization ON",
     "#define FLAG_UNUSED_0x494                                           0x494 // Unused Flag":
         "#define FLAG_RANDOMIZER_DISABLE_TRAINERS                          0x494 // Cleared by default: trainer randomization ON",
+    "#define FLAG_UNUSED_0x495                                           0x495 // Unused Flag":
+        "#define FLAG_RANDOMIZER_DISABLE_ITEMS                             0x495 // Cleared by default: item randomization ON",
 }
 
 def _pool_source(pool: list[str], name: str) -> str:
