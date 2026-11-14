@@ -3,13 +3,28 @@
   "seed": "CHANGE-ME",
   "world": {
     "mode": "both_open",
-    "regions": ["hoenn", "sinnoh"],
+    "regions": [
+      "hoenn",
+      "sinnoh"
+    ],
     "travel_unlocked_at_start": true
   },
   "gym_progression": {
     "mode": "scaled",
-    "progression_inputs": ["total_badges", "major_story_milestones"],
-    "tier_thresholds": [0, 2, 4, 6, 8, 10, 12, 14],
+    "progression_inputs": [
+      "total_badges",
+      "major_story_milestones"
+    ],
+    "tier_thresholds": [
+      0,
+      2,
+      4,
+      6,
+      8,
+      10,
+      12,
+      14
+    ],
     "scale_levels": true,
     "scale_team_size": true,
     "scale_evolutions": true
@@ -27,14 +42,27 @@
   },
   "hidden_grottos": {
     "enabled": true,
-    "regions": ["hoenn", "sinnoh"],
+    "regions": [
+      "hoenn",
+      "sinnoh"
+    ],
     "planned_grotto_count": 12,
-    "encounters": ["ultra_beast", "rare_item", "empty"],
+    "encounters": [
+      "ultra_beast",
+      "rare_item",
+      "empty"
+    ],
     "ultra_beasts_catchable": true,
     "seeded_per_grotto": true,
     "independent_stream_prefix": "grotto",
     "locations_document": "docs/SECRET_GROTTO_GUIDE.md",
-    "locations_require_map_audit": true
+    "locations_require_map_audit": true,
+    "outcome_weights": {
+      "ultra_beast": 45,
+      "rare_item": 35,
+      "empty": 20
+    },
+    "ultra_beast_pool": "all_supported_ultra_beasts"
   },
   "mega_evolution": {
     "enabled": true,
@@ -42,7 +70,12 @@
     "implementation": "use_pinned_upstream_support"
   },
   "reproducibility": {
-    "independent_streams": ["starters", "wild_encounters", "legendary_placement", "grotto"],
+    "independent_streams": [
+      "starters",
+      "wild_encounters",
+      "legendary_placement",
+      "grotto"
+    ],
     "settings_versioned": true
   }
 }
