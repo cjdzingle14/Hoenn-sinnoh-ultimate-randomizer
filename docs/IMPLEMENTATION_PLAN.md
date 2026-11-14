@@ -75,7 +75,7 @@
 
 ## Phase 9 — TM/HM quality-of-life
 
-- [ ] Make every TM reusable after it is obtained; teaching a move must not consume the TM item.
+- [x] Make every TM reusable after it is obtained; teaching a move must not consume the TM item (engine overlay + automated source-patch tests).
 - [ ] Unlock each HM field ability when its HM item is obtained.
 - [ ] Remove party-member/known-move requirements for HM field actions; no HM mule needed.
 - [ ] Remove badge gates for HM field abilities, while retaining story/map progression gates where required.
