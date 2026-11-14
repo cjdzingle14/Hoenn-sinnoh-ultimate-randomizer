@@ -64,10 +64,10 @@ def test_palette_preview_preserves_slot_zero_and_writes_valid_jasc(tmp_path: Pat
     source.mkdir()
     palette = source / "normal_gba.pal"
     palette.write_text(
-        "JASC-PAL\\n0100\\n3\\n"
-        "255 0 255\\n"
-        "120 100 80\\n"
-        "40 60 80\\n",
+        "JASC-PAL\n0100\n3\n"
+        "255 0 255\n"
+        "120 100 80\n"
+        "40 60 80\n",
         encoding="utf-8",
     )
 
