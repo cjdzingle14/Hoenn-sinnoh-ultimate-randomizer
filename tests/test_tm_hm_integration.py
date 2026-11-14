@@ -7,6 +7,7 @@ def test_tms_are_not_removed_after_learning():
     assert OLD not in patched
     assert NEW in patched
     assert "TMs and HMs are reusable" in patched
+    assert "enum Item item = gSpecialVar_ItemId;" not in patched
 
 
 def test_patch_is_idempotent():
