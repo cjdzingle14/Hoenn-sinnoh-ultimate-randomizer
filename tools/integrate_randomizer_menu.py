@@ -59,12 +59,12 @@ def patch_option_menu(source: str) -> str:
         "        gTasks[taskId].tRandomizerTrainersDisabled = FlagGet(FLAG_RANDOMIZER_DISABLE_TRAINERS);\n",
         "randomizer option initialization",
     )
-    source = _replace_once(
-        source,
-        "        FrameType_DrawChoices(gTasks[taskId].tWindowFrameType);\n",
-        "        FrameType_DrawChoices(gTasks[taskId].tWindowFrameType);\n"
-        "        Randomizer_DrawChoices(gTasks[taskId].tRandomizerWildDisabled, YPOS_RANDOMIZER_WILD);\n"
-        "        Randomizer_DrawChoices(gTasks[taskId].tRandomizerTrainersDisabled, YPOS_RANDOMIZER_TRAINERS);\n",
+        "        FrameType_DrawChoices(gTasks[taskId].tWindowFrameType);\\n"
+        "        HighlightOptionMenuItem(gTasks[taskId].tMenuSelection);\\n",
+        "        FrameType_DrawChoices(gTasks[taskId].tWindowFrameType);\\n"
+        "        Randomizer_DrawChoices(gTasks[taskId].tRandomizerWildDisabled, YPOS_RANDOMIZER_WILD);\\n"
+        "        Randomizer_DrawChoices(gTasks[taskId].tRandomizerTrainersDisabled, YPOS_RANDOMIZER_TRAINERS);\\n"
+        "        HighlightOptionMenuItem(gTasks[taskId].tMenuSelection);\\n",
         "randomizer option drawing during initialization",
     )
     source = _replace_once(
