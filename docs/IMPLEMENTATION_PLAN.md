@@ -41,13 +41,23 @@
 - Place legendary species in eligible slots with rarity and duplicate controls.
 - Preserve required story encounters by default.
 
-## Phase 5 — Mega Evolution
+## Phase 5 — Secret Hidden Grottos and Ultra Beasts
+
+- [ ] Audit the final Hoenn and imported Sinnoh map data and assign exact map IDs/coordinates to the 12 planned grotto landmarks.
+- [ ] Add concealed entrances and environmental clues at the locations in docs/SECRET_GROTTO_GUIDE.md.
+- [ ] Add a grotto interaction/event system separate from ordinary wild encounter tables.
+- [ ] Add per-grotto deterministic random streams, encounter tables, rarity tiers, and rare-item outcomes.
+- [ ] Add catchable Ultra Beast encounters and confirm every selected species is supported by the pinned engine.
+- [ ] Add in-game hints and keep the spoiler guide synchronized with final map coordinates.
+- [ ] Test all entrances, region order independence, save/load, seed reproducibility, and story progression.
+
+## Phase 6 — Mega Evolution
 
 - Confirm supported upstream Mega Evolution implementation and data.
 - Integrate Mega Stones, form changes, abilities, and battle flow as needed.
 - Test player and AI use, transformation/reversion, fainting, switching, and save compatibility.
 
-## Phase 6 — quality and release
+## Phase 7 — quality and release
 
 - Run automated tests and a clean ROM build.
 - Playtest both region orders and all Gym tiers.
