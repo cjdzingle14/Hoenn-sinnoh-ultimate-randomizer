@@ -15,7 +15,11 @@ def patch_party_menu(source: str) -> str:
     count = source.count(OLD)
     if count != 1:
         raise ValueError(f"Expected exactly one TM/HM consumption check, found {count}")
-    return source.replace(OLD, NEW, 1)
+    source = source.replace(OLD, NEW, 1)
+    declaration = "    enum Item item = gSpecialVar_ItemId;\\n\\n    if (gPartyMenu.learnMoveState == 0)"
+    if source.count(declaration) != 1:
+        raise ValueError("Expected exactly one TM/HM item local in Task_LearnedMove")
+    return source.replace(declaration, "    if (gPartyMenu.learnMoveState == 0)", 1)
 
 
 def integrate(engine_dir: Path) -> None:
