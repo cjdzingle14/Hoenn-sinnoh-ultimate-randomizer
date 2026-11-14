@@ -76,7 +76,7 @@
 ## Phase 9 — TM/HM quality-of-life
 
 - [x] Make every TM reusable after it is obtained; teaching a move must not consume the TM item (engine overlay + automated source-patch tests).
-- [ ] Unlock each HM field ability when its HM item is obtained.
-- [ ] Remove party-member/known-move requirements for HM field actions; no HM mule needed.
-- [ ] Remove badge gates for HM field abilities, while retaining story/map progression gates where required.
+- [x] Unlock each HM field ability when its HM item is obtained (engine overlay + automated source-patch tests).
+- [x] Remove party-member/known-move requirements for HM field actions; no HM mule needed (HM action appears on any selected Pokémon after the HM item is obtained).
+- [x] Remove badge gates for HM field abilities, while retaining story/map progression gates where required (field/map checks remain in the upstream field-effect handlers).
 - [ ] Test Cut, Fly, Surf, Strength, Flash, Rock Smash, Waterfall, and Dive in relevant locations, including save/load.
