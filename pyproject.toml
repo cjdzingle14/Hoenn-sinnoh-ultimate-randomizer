@@ -1,0 +1,9 @@
+[project]
+name = "hoenn-sinnoh-ultimate-randomizer"
+version = "0.1.0"
+description = "Deterministic randomizer rules for a Hoenn and Sinnoh Pokémon ROM-hack project"
+requires-python = ">=3.10"
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
