@@ -26,6 +26,13 @@ class GrottoRulesTests(unittest.TestCase):
         self.assertEqual(kind, "ultra_beast")
         self.assertIn(species, self.beasts)
 
+    def test_zero_chance_outcomes_are_removed_before_weighted_selection(self):
+        args = dict(seed="alpha", ultra_beasts=self.beasts, rare_items=self.items)
+        result = choose_grotto_outcome("only-items", **args,
+            weights={"ultra_beast": 0, "rare_item": 1, "empty": 0})
+        self.assertEqual(result[0], "rare_item")
+        self.assertIn(result[1], self.items)
+
     def test_invalid_pools_and_weights_are_rejected(self):
         with self.assertRaises(ValueError):
             choose_grotto_outcome("bad", seed="alpha", ultra_beasts=[],
