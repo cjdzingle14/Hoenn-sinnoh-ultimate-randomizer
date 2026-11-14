@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "seed": "CHANGE-ME",
+  "world": {
+    "mode": "both_open",
+    "regions": ["hoenn", "sinnoh"],
+    "travel_unlocked_at_start": true
+  },
+  "gym_progression": {
+    "mode": "scaled",
+    "progression_inputs": ["total_badges", "major_story_milestones"],
+    "tier_thresholds": [0, 2, 4, 6, 8, 10, 12, 14],
+    "scale_levels": true,
+    "scale_team_size": true,
+    "scale_evolutions": true
+  },
+  "starters": {
+    "mode": "random_three_distinct",
+    "pool": "all_supported_non_banned_species",
+    "exclude_legendary": true
+  },
+  "encounters": {
+    "randomize_wild": true,
+    "legendary_anywhere": true,
+    "legendary_duplicate_policy": "allow",
+    "preserve_story_legendary_encounters": true
+  },
+  "mega_evolution": {
+    "enabled": true,
+    "scope": "official_supported_mega_species",
+    "implementation": "use_pinned_upstream_support"
+  },
+  "reproducibility": {
+    "independent_streams": ["starters", "wild_encounters", "legendary_placement"],
+    "settings_versioned": true
+  }
+}
