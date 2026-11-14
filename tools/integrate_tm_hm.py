@@ -6,9 +6,7 @@ from pathlib import Path
 
 OLD = """        if (!GetItemImportance(item))
             RemoveBagItem(item, 1);"""
-NEW = """        // Technical Machines are reusable; retain the normal handling of non-TM items.
-        if (!GetItemImportance(item) && GetItemTMHMIndex(item) > NUM_TECHNICAL_MACHINES)
-            RemoveBagItem(item, 1);"""
+NEW = """        // TMs and HMs are reusable; keep both items in the bag after teaching."""
 
 
 def patch_party_menu(source: str) -> str:
