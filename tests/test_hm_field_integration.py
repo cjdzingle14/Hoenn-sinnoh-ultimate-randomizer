@@ -28,3 +28,19 @@ def test_patch_rejects_unrecognized_engine_source():
         patch_field_move("unrecognized source")
     with pytest.raises(ValueError):
         patch_party_menu("unrecognized source")
+
+
+def test_all_eight_hms_map_to_their_matching_items():
+    expected = [
+        "FIELD_MOVE_CUT: return ITEM_HM_CUT",
+        "FIELD_MOVE_FLY: return ITEM_HM_FLY",
+        "FIELD_MOVE_SURF: return ITEM_HM_SURF",
+        "FIELD_MOVE_STRENGTH: return ITEM_HM_STRENGTH",
+        "FIELD_MOVE_FLASH: return ITEM_HM_FLASH",
+        "FIELD_MOVE_ROCK_SMASH: return ITEM_HM_ROCK_SMASH",
+        "FIELD_MOVE_WATERFALL: return ITEM_HM_WATERFALL",
+        "FIELD_MOVE_DIVE: return ITEM_HM_DIVE",
+    ]
+    for mapping in expected:
+        assert mapping in FIELD_NEW
+        assert mapping in PARTY_NEW
