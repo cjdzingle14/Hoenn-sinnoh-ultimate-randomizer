@@ -22,7 +22,7 @@
 - Audit Hoenn map groups, map connections, warps, flags, and event scripts.
 - Define the Sinnoh map import strategy and map ID allocation.
 - Add a region travel hub and test transitions, save/load, and return paths.
-- Namespace story flags to prevent Hoenn/Sinnoh collisions.
+- Namespace story flags to prevent Hoenn/Sinnoh flag collisions.
 - Ensure both regions can be entered before either League is completed.
 
 ## Phase 3 — progression scaling
@@ -46,7 +46,8 @@
 - [ ] Audit the final Hoenn and imported Sinnoh map data and assign exact map IDs/coordinates to the 12 planned grotto landmarks.
 - [ ] Add concealed entrances and environmental clues at the locations in docs/SECRET_GROTTO_GUIDE.md.
 - [ ] Add a grotto interaction/event system separate from ordinary wild encounter tables.
-- [x] Add a tested Python rule layer for reproducible per-grotto outcome selection using independent deterministic streams.\n- [ ] Connect per-grotto rules to in-game event scripts, encounter tables, rarity tiers, and rare-item outcomes.
+- [x] Add a tested Python rule layer for reproducible per-grotto outcome selection using independent deterministic streams.
+- [ ] Connect per-grotto rules to in-game event scripts, encounter tables, rarity tiers, and rare-item outcomes.
 - [ ] Add catchable Ultra Beast encounters and confirm every selected species is supported by the pinned engine.
 - [ ] Add in-game hints and keep the spoiler guide synchronized with final map coordinates.
 - [ ] Test all entrances, region order independence, save/load, seed reproducibility, and story progression.
@@ -71,3 +72,11 @@
 - [ ] Remove greeting, questions, and all pre-heal dialogue while preserving the normal healing sequence and required scripts.
 - [ ] Show one brief Nurse Joy confirmation only after healing has completed.
 - [ ] Apply consistently to every Pokémon Center map and test party healing, eggs, sound/animation, and repeat visits.
+
+## Phase 9 — TM/HM quality-of-life
+
+- [ ] Make every TM reusable after it is obtained; teaching a move must not consume the TM item.
+- [ ] Unlock each HM field ability when its HM item is obtained.
+- [ ] Remove party-member/known-move requirements for HM field actions; no HM mule needed.
+- [ ] Remove badge gates for HM field abilities, while retaining story/map progression gates where required.
+- [ ] Test Cut, Fly, Surf, Strength, Flash, Rock Smash, Waterfall, and Dive in relevant locations, including save/load.
