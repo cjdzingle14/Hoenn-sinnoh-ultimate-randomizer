@@ -36,7 +36,9 @@ jobs:
           arm-none-eabi-gcc --version
       - name: Apply per-new-game randomized starter choices
         run: python -m tools.integrate_starters --engine-dir vendor/pokeemerald-expansion
-      - name: Apply seeded wild and trainer randomization
+      - name: Integrate runtime wild and trainer randomization
+        run: python -m tools.integrate_runtime_randomizers --engine-dir vendor/pokeemerald-expansion
+      - name: Configure rival 10 Poké Ball gift
         run: python -m tools.integrate_encounters --engine-dir vendor/pokeemerald-expansion
       - name: Apply streamlined Nurse Joy healing flow
         run: python -m tools.integrate_nurse_joy --engine-dir vendor/pokeemerald-expansion
