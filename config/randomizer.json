@@ -25,13 +25,24 @@
     "legendary_duplicate_policy": "allow",
     "preserve_story_legendary_encounters": true
   },
+  "hidden_grottos": {
+    "enabled": true,
+    "regions": ["hoenn", "sinnoh"],
+    "planned_grotto_count": 12,
+    "encounters": ["ultra_beast", "rare_item", "empty"],
+    "ultra_beasts_catchable": true,
+    "seeded_per_grotto": true,
+    "independent_stream_prefix": "grotto",
+    "locations_document": "docs/SECRET_GROTTO_GUIDE.md",
+    "locations_require_map_audit": true
+  },
   "mega_evolution": {
     "enabled": true,
     "scope": "official_supported_mega_species",
     "implementation": "use_pinned_upstream_support"
   },
   "reproducibility": {
-    "independent_streams": ["starters", "wild_encounters", "legendary_placement"],
+    "independent_streams": ["starters", "wild_encounters", "legendary_placement", "grotto"],
     "settings_versioned": true
   }
 }
