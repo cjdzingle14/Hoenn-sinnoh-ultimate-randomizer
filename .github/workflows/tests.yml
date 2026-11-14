@@ -40,6 +40,8 @@ jobs:
         run: python -m tools.integrate_encounters --engine-dir vendor/pokeemerald-expansion
       - name: Apply streamlined Nurse Joy healing flow
         run: python -m tools.integrate_nurse_joy --engine-dir vendor/pokeemerald-expansion
+      - name: Apply reusable Technical Machines
+        run: python -m tools.integrate_tm_hm --engine-dir vendor/pokeemerald-expansion
       - name: Build custom engine ROM
         working-directory: vendor/pokeemerald-expansion
         run: make -j2
