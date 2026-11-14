@@ -22,10 +22,16 @@ Select three distinct eligible species from the configured pool using the run se
 
 Legendary species can be assigned to eligible wild encounter slots across both regions. Use a configurable duplicate policy and protect story-critical encounter slots by default. The Python prototype currently supports protected slot IDs and allow/unique duplicate policies; engine encounter table discovery is still pending.
 
+## Secret Hidden Grottos and Ultra Beasts
+
+Add optional, concealed grotto discoveries across both regions. Grottos are separate from ordinary wild encounter tables and can yield a seeded Ultra Beast encounter, a rare item, or an empty visit. Ultra Beasts are catchable. Each grotto uses a dedicated deterministic randomization stream so changing one location does not reshuffle the others. Some late-game grottos may use a higher encounter tier, but both regions remain accessible from the start.
+
+The intended Hoenn locations are Petalburg Woods, Granite Cave, Fiery Path, Mt. Pyre, Route 119, and Shoal Cave. The intended Sinnoh locations are Eterna Forest, Wayward Cave, Mt. Coronet, Fuego Ironworks, Great Marsh, and the Snowpoint Temple approach. The spoiler guide at [SECRET_GROTTO_GUIDE.md](SECRET_GROTTO_GUIDE.md) lists all planned locations and clues. These are design targets only: final map IDs, coordinates, access requirements, and in-game clues must be verified against the actual imported map data before being described as final.
+
 ## Mega Evolution
 
 Mega Evolution is a feature requirement. Use only mechanics, items, species forms, and battle hooks supported by the selected pokeemerald-expansion revision. Verify every Mega-capable species, stone, ability, and form transition against that revision; do not assume upstream APIs remain stable.
 
 ## Randomizer reproducibility
 
-A seed plus versioned settings must reproduce the same randomized result. Independent deterministic streams are used for starters, wild encounters, and legendary placement so adding a random draw to one subsystem does not reshuffle all others.
+A seed plus versioned settings must reproduce the same randomized result. Independent deterministic streams are used for starters, wild encounters, legendary placement, and each grotto so adding a random draw to one subsystem does not reshuffle all others.
