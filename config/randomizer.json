@@ -3,36 +3,29 @@
   "seed": "CHANGE-ME",
   "world": {
     "mode": "both_open",
-    "regions": [
-      "hoenn",
-      "sinnoh"
-    ],
+    "regions": ["hoenn", "sinnoh"],
     "travel_unlocked_at_start": true
   },
   "gym_progression": {
     "mode": "scaled",
-    "progression_inputs": [
-      "total_badges",
-      "major_story_milestones"
-    ],
-    "tier_thresholds": [
-      0,
-      2,
-      4,
-      6,
-      8,
-      10,
-      12,
-      14
-    ],
+    "progression_inputs": ["total_badges", "major_story_milestones"],
+    "tier_thresholds": [0, 2, 4, 6, 8, 10, 12, 14],
     "scale_levels": true,
     "scale_team_size": true,
     "scale_evolutions": true
   },
   "starters": {
-    "mode": "random_three_distinct",
+    "mode": "random_three_per_region",
+    "regions": ["hoenn", "sinnoh"],
+    "choices_per_region": 3,
+    "player_picks_per_region": 1,
+    "unique_across_both_regions": true,
     "pool": "all_supported_non_banned_species",
-    "exclude_legendary": true
+    "exclude_legendary": true,
+    "selection_streams": {
+      "hoenn": "starters:hoenn",
+      "sinnoh": "starters:sinnoh"
+    }
   },
   "encounters": {
     "randomize_wild": true,
@@ -42,26 +35,15 @@
   },
   "hidden_grottos": {
     "enabled": true,
-    "regions": [
-      "hoenn",
-      "sinnoh"
-    ],
+    "regions": ["hoenn", "sinnoh"],
     "planned_grotto_count": 12,
-    "encounters": [
-      "ultra_beast",
-      "rare_item",
-      "empty"
-    ],
+    "encounters": ["ultra_beast", "rare_item", "empty"],
     "ultra_beasts_catchable": true,
     "seeded_per_grotto": true,
     "independent_stream_prefix": "grotto",
     "locations_document": "docs/SECRET_GROTTO_GUIDE.md",
     "locations_require_map_audit": true,
-    "outcome_weights": {
-      "ultra_beast": 45,
-      "rare_item": 35,
-      "empty": 20
-    },
+    "outcome_weights": {"ultra_beast": 45, "rare_item": 35, "empty": 20},
     "ultra_beast_pool": "all_supported_ultra_beasts"
   },
   "mega_evolution": {
@@ -71,7 +53,8 @@
   },
   "reproducibility": {
     "independent_streams": [
-      "starters",
+      "starters:hoenn",
+      "starters:sinnoh",
       "wild_encounters",
       "legendary_placement",
       "grotto"
