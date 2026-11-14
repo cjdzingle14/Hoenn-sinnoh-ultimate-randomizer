@@ -1,0 +1,28 @@
+name: Starter project tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Extract starter project
+        run: |
+          mkdir -p .starter
+          unzip -q hoenn-sinnoh-ultimate-randomizer-starter.zip -d .starter
+      - name: Install test runner
+        run: python -m pip install --upgrade pip pytest
+      - name: Run starter tests
+        working-directory: .starter/hoenn-sinnoh-ultimate-randomizer
+        run: python -m pytest -q
