@@ -30,6 +30,7 @@ static const u8 *const sOptionMenuItemsNames[MENUITEM_COUNT] =
 
         gTasks[taskId].tWindowFrameType = gSaveBlock2Ptr->optionsWindowFrameType;
         FrameType_DrawChoices(gTasks[taskId].tWindowFrameType);
+        HighlightOptionMenuItem(gTasks[taskId].tMenuSelection);
 
         case MENUITEM_FRAMETYPE:
             previousOption = gTasks[taskId].tWindowFrameType;
@@ -81,4 +82,4 @@ def test_menu_patch_is_idempotent():
 
 def test_menu_patch_fails_closed_when_upstream_source_changes():
     with pytest.raises(ValueError):
-        patch_option_menu('#include "global.h"\\n')
+        patch_option_menu('missing upstream menu anchors')
