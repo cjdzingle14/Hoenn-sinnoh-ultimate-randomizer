@@ -17,7 +17,7 @@ class EncounterIntegrationTests(unittest.TestCase):
         self.assertEqual(data["wild_encounter_groups"][0]["encounters"][0]["land_mons"]["encounter_rate"], 20)
 
     def test_trainer_randomization_keeps_levels_and_party_size(self):
-        source = "=== TRAINER_TEST ===\\nName: TEST\\n\\nPoochyena\\nLevel: 7\\nIVs: 0 HP\\n"
+        source = "=== TRAINER_TEST ===\nName: TEST\n\nPoochyena\nLevel: 7\nIVs: 0 HP\n"
         patched, count = randomize_trainer_parties(source, ["SPECIES_TREECKO", "SPECIES_TURTWIG", "SPECIES_POOCHYENA"], "test")
         self.assertEqual(count, 1)
         self.assertIn("Level: 7", patched)
@@ -26,10 +26,10 @@ class EncounterIntegrationTests(unittest.TestCase):
 
     def test_both_rival_variants_give_ten_pokeballs(self):
         source = (
-            "LittlerootTown_ProfessorBirchsLab_EventScript_MayGivePokeBalls::\\n"
-            "\\tgiveitem ITEM_POKE_BALL, 5\\n"
-            "LittlerootTown_ProfessorBirchsLab_EventScript_BrendanGivePokeBalls::\\n"
-            "\\tgiveitem ITEM_POKE_BALL, 5\\n"
+            "LittlerootTown_ProfessorBirchsLab_EventScript_MayGivePokeBalls::\n"
+            "\tgiveitem ITEM_POKE_BALL, 5\n"
+            "LittlerootTown_ProfessorBirchsLab_EventScript_BrendanGivePokeBalls::\n"
+            "\tgiveitem ITEM_POKE_BALL, 5\n"
         )
         patched, count = increase_rival_pokeball_gift(source, 10)
         self.assertEqual(count, 2)
