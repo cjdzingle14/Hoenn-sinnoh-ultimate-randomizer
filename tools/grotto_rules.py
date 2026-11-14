@@ -14,7 +14,7 @@ def choose_grotto_outcome(grotto_id: str, *, seed: str, ultra_beasts: Sequence[T
         raise ValueError("ultra_beasts must not contain duplicates")
     if len(set(rare_items)) != len(rare_items):
         raise ValueError("rare_items must not contain duplicates")
-    chances = weights or {"ultra_beast": 45, "rare_item": 35, "empty": 20}
+    chances = weights if weights is not None else {"ultra_beast": 45, "rare_item": 35, "empty": 20}
     if set(chances) != {"ultra_beast", "rare_item", "empty"}:
         raise ValueError("weights must define ultra_beast, rare_item, and empty")
     if any(type(value) is not int or value < 0 for value in chances.values()) or not any(chances.values()):
