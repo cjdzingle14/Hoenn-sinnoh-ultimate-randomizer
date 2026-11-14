@@ -34,7 +34,7 @@ jobs:
         run: |
           git -C vendor/pokeemerald-expansion rev-parse HEAD
           arm-none-eabi-gcc --version
-      - name: Apply seeded starter integration
+      - name: Apply per-new-game randomized starter choices
         run: python -m tools.integrate_starters --engine-dir vendor/pokeemerald-expansion
       - name: Apply seeded wild and trainer randomization
         run: python -m tools.integrate_encounters --engine-dir vendor/pokeemerald-expansion
@@ -45,7 +45,7 @@ jobs:
         run: make -j2
       - name: Validate standard GBA header for emulator compatibility
         run: python -m tools.validate_gba_rom vendor/pokeemerald-expansion/pokeemerald.gba
-      - name: Upload custom starter-integration ROM
+      - name: Upload custom per-playthrough starter ROM
         uses: actions/upload-artifact@v4
         with:
           name: hoenn-sinnoh-test-build
