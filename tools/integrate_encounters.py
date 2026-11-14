@@ -113,9 +113,10 @@ def increase_rival_pokeball_gift(script: str, amount: int = 10) -> tuple[str, in
         if line.startswith("LittlerootTown_ProfessorBirchsLab_EventScript_MayGivePokeBalls::") or line.startswith("LittlerootTown_ProfessorBirchsLab_EventScript_BrendanGivePokeBalls::"):
             active = True
             continue
-        if active and line.startswith("giveitem ITEM_POKE_BALL,"):
+        if active and line.lstrip().startswith("giveitem ITEM_POKE_BALL,"):
             ending = "\\n" if line.endswith("\\n") else ""
-            lines[index] = f"\\tgiveitem ITEM_POKE_BALL, {amount}{ending}"
+            indent = line[:len(line) - len(line.lstrip())]
+            lines[index] = f"{indent}giveitem ITEM_POKE_BALL, {amount}{ending}"
             patched += 1
             active = False
         elif active and line.strip().endswith("::"):
