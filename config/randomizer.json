@@ -33,6 +33,13 @@
     "legendary_duplicate_policy": "allow",
     "preserve_story_legendary_encounters": true
   },
+  "tm_hm_quality_of_life": {
+    "tms_reusable": true,
+    "hm_field_moves_require_party_member": false,
+    "hm_field_moves_require_badge": false,
+    "hm_field_moves_unlock_on_item_obtained": true,
+    "hm_moves_teachable_to_compatible_pokemon": true
+  },
   "hidden_grottos": {
     "enabled": true,
     "regions": ["hoenn", "sinnoh"],
