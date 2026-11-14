@@ -45,8 +45,19 @@ def validate_settings(settings: Mapping[str, Any]) -> None:
             errors.append("gym_progression.mode must be 'scaled'")
 
     starters = settings.get("starters")
-    if not isinstance(starters, Mapping) or starters.get("mode") != "random_three_distinct":
-        errors.append("starters.mode must be 'random_three_distinct'")
+    if not isinstance(starters, Mapping):
+        errors.append("starters must be an object")
+    else:
+        if starters.get("mode") != "random_three_per_region":
+            errors.append("starters.mode must be 'random_three_per_region'")
+        if starters.get("regions") != ["hoenn", "sinnoh"]:
+            errors.append("starters.regions must list hoenn and sinnoh in order")
+        if starters.get("choices_per_region") != 3:
+            errors.append("starters.choices_per_region must be 3")
+        if starters.get("player_picks_per_region") != 1:
+            errors.append("starters.player_picks_per_region must be 1")
+        if starters.get("unique_across_both_regions") is not True:
+            errors.append("starters.unique_across_both_regions must be true")
 
     encounters = settings.get("encounters")
     if not isinstance(encounters, Mapping):
@@ -111,6 +122,22 @@ def choose_starters(
     banned = set(banned_species)
     pool = [species for species in eligible_species if species not in banned]
     return choose_distinct(pool, 3, seed=seed, stream="starters")
+
+
+def choose_regional_starters(
+    eligible_species: Sequence[T],
+    *,
+    seed: str,
+    banned_species: Iterable[T] = (),
+) -> dict[str, list[T]]:
+    """Choose three unique options per region; all six are distinct across regions."""
+    banned = set(banned_species)
+    pool = list(dict.fromkeys(species for species in eligible_species if species not in banned))
+    hoenn = choose_distinct(pool, 3, seed=seed, stream="starters:hoenn")
+    selected_hoenn = set(hoenn)
+    sinnoh_pool = [species for species in pool if species not in selected_hoenn]
+    sinnoh = choose_distinct(sinnoh_pool, 3, seed=seed, stream="starters:sinnoh")
+    return {"hoenn": hoenn, "sinnoh": sinnoh}
 
 
 def place_legendary_encounters(
