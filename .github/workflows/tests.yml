@@ -1,4 +1,4 @@
-name: Project tests and engine baseline
+name: Project tests and custom engine build
 
 on:
   push:
@@ -11,18 +11,14 @@ jobs:
   randomizer-tests:
     runs-on: ubuntu-latest
     steps:
-      - name: Check out repository
-        uses: actions/checkout@v4
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - name: Install test runner
-        run: python -m pip install --upgrade pip pytest
-      - name: Run project tests
-        run: python -m pytest -q
+      - run: python -m pip install --upgrade pip pytest
+      - run: python -m pytest -q
 
-  engine-baseline:
+  engine-custom:
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     steps:
@@ -30,7 +26,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           submodules: recursive
-      - name: Install pokeemerald-expansion build dependencies
+      - name: Install engine build dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y build-essential binutils-arm-none-eabi gcc-arm-none-eabi libnewlib-arm-none-eabi git libpng-dev python3
@@ -38,13 +34,15 @@ jobs:
         run: |
           git -C vendor/pokeemerald-expansion rev-parse HEAD
           arm-none-eabi-gcc --version
-      - name: Build unmodified upstream engine
+      - name: Apply seeded starter integration
+        run: python -m tools.integrate_starters --engine-dir vendor/pokeemerald-expansion
+      - name: Build custom engine ROM
         working-directory: vendor/pokeemerald-expansion
         run: make -j2
-      - name: Upload bootable engine baseline ROM
+      - name: Upload custom starter-integration ROM
         uses: actions/upload-artifact@v4
         with:
-          name: hoenn-sinnoh-engine-baseline
+          name: hoenn-sinnoh-custom-starter-integration
           path: vendor/pokeemerald-expansion/pokeemerald.gba
           if-no-files-found: error
           retention-days: 14
