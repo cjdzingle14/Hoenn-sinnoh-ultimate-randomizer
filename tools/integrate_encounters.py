@@ -104,6 +104,26 @@ def randomize_trainer_parties(source: str, species: list[str], seed: str) -> tup
     return "".join(output), changed
 
 
+def increase_rival_pokeball_gift(script: str, amount: int = 10) -> tuple[str, int]:
+    """Set both rival-name-specific early Poké Ball gifts to the requested amount."""
+    lines = script.splitlines(keepends=True)
+    patched = 0
+    active = False
+    for index, line in enumerate(lines):
+        if line.startswith("LittlerootTown_ProfessorBirchsLab_EventScript_MayGivePokeBalls::") or line.startswith("LittlerootTown_ProfessorBirchsLab_EventScript_BrendanGivePokeBalls::"):
+            active = True
+            continue
+        if active and line.startswith("giveitem ITEM_POKE_BALL,"):
+            ending = "\\n" if line.endswith("\\n") else ""
+            lines[index] = f"\\tgiveitem ITEM_POKE_BALL, {amount}{ending}"
+            patched += 1
+            active = False
+        elif active and line.strip().endswith("::"):
+            active = False
+    if patched != 2:
+        raise ValueError(f"Expected to patch both rival Poké Ball gift scripts; found {patched}")
+    return "".join(lines), patched
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--engine-dir", type=Path, required=True)
@@ -123,7 +143,12 @@ def main() -> None:
     trainer_source = trainer_path.read_text(encoding="utf-8")
     trainer_result, trainer_count = randomize_trainer_parties(trainer_source, pool, seed)
     trainer_path.write_text(trainer_result, encoding="utf-8")
-    print(f"Randomized {wild_count} wild slots and {trainer_count} trainer Pokémon (seed={seed})")
+
+    rival_script_path = args.engine_dir / "data/maps/LittlerootTown_ProfessorBirchsLab/scripts.inc"
+    rival_script = rival_script_path.read_text(encoding="utf-8")
+    rival_script, rival_gifts = increase_rival_pokeball_gift(rival_script, 10)
+    rival_script_path.write_text(rival_script, encoding="utf-8")
+    print(f"Randomized {wild_count} wild slots and {trainer_count} trainer Pokémon; rival gifts: {rival_gifts} x 10 Poké Balls (seed={seed})")
 
 
 if __name__ == "__main__":
