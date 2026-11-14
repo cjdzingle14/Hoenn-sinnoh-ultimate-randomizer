@@ -10,44 +10,46 @@ from pathlib import Path
 from PIL import Image
 
 
-def palette_report(path: Path) -> tuple[str, int | None, bool]:
-    """Return image mode, palette color count (if indexed), and transparency."""
+def palette_report(path: Path) -> tuple[str, int, bool]:
+    """Return source mode, visible-color count, and whether transparency exists."""
     with Image.open(path) as image:
         mode = image.mode
-        if mode == "P":
-            used_colors = image.getcolors(maxcolors=256)
-            colors = len(used_colors or [])
-            transparent = "transparency" in image.info
-            return mode, colors, transparent
-        if mode in ("RGBA", "LA"):
-            return mode, None, image.getchannel("A").getextrema()[0] == 0
-        return mode, None, False
+        rgba = image.convert("RGBA")
+        colors = rgba.getcolors(maxcolors=65536)
+        if colors is None:
+            raise ValueError("image has more than 65,536 distinct RGBA colors")
+        visible_colors = sum(1 for count, color in colors if color[3] > 0)
+        alpha = rgba.getchannel("A")
+        has_transparency = alpha.getextrema()[0] == 0
+        return mode, visible_colors, has_transparency
+
+
+def gba_sprite_files(root: Path) -> list[Path]:
+    """Limit strict 4bpp checks to explicit GBA-converted Pokémon PNG assets."""
+    return sorted(path for path in root.rglob("*.png") if "_gba" in path.stem)
 
 
 def audit(root: Path) -> list[str]:
-    """Find PNGs that may need manual palette/transparency review."""
+    """Check GBA-converted Pokémon assets against 4bpp palette constraints."""
     issues: list[str] = []
-    pngs = sorted(root.rglob("*.png"))
-    for path in pngs:
+    for path in gba_sprite_files(root):
         try:
             mode, colors, has_transparency = palette_report(path)
-            if mode != "P":
-                issues.append(f"{path}: mode={mode}; expected indexed/paletted PNG")
-            elif colors is not None and colors > 16:
-                issues.append(f"{path}: {colors} palette colors; GBA 4bpp assets allow at most 16")
+            if colors > 15:
+                issues.append(f"{path}: {colors} visible colors; 4bpp sprites reserve one of 16 entries for transparency")
             if not has_transparency:
-                issues.append(f"{path}: no transparent color/channel detected; verify sprite background")
+                issues.append(f"{path}: no transparent pixels detected; verify sprite background")
         except (OSError, ValueError) as exc:
             issues.append(f"{path}: could not inspect ({exc})")
     return issues
 
 
 def make_previews(root: Path, destination: Path, scale: int = 3) -> int:
-    """Write nearest-neighbor enlarged PNG previews without touching source assets."""
+    """Write nearest-neighbor previews of GBA-converted PNGs without touching sources."""
     if scale < 2:
         raise ValueError("preview scale must be at least 2")
     count = 0
-    for path in sorted(root.rglob("*.png")):
+    for path in gba_sprite_files(root):
         relative = path.relative_to(root)
         target = destination / relative
         target.parent.mkdir(parents=True, exist_ok=True)
@@ -65,7 +67,7 @@ def main() -> int:
     parser.add_argument("--scale", type=int, default=3)
     args = parser.parse_args()
 
-    roots = [args.engine_dir / "graphics" / "pokemon", args.engine_dir / "graphics" / "trainers"]
+    roots = [args.engine_dir / "graphics" / "pokemon"]
     roots = [root for root in roots if root.is_dir()]
     if not roots:
         parser.error("no graphics/pokemon or graphics/trainers folders found under --engine-dir")
@@ -73,7 +75,7 @@ def main() -> int:
     total_issues = 0
     for root in roots:
         issues = audit(root)
-        print(f"{root}: checked {len(list(root.rglob('*.png')))} PNG files")
+        print(f"{root}: checked {len(gba_sprite_files(root))} PNG files")
         for issue in issues:
             print(f"REVIEW: {issue}")
         total_issues += len(issues)
