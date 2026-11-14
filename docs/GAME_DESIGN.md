@@ -16,7 +16,7 @@ Scaling should preserve each Gym's identity while changing team size, levels, mo
 
 ## Starter randomization
 
-Each region presents its own set of three randomized starter choices. The player chooses one Pokémon in Hoenn and one Pokémon in Sinnoh, for two starter selections total across the adventure. All six offered Pokémon are distinct across both regions, excluding unsupported and banned species. A run seed and separate starter streams for Hoenn and Sinnoh make the result reproducible. The regional selection screens and persistent starter grants still need engine integration; the Python rules prototype defines and tests the six-choice result.
+Each region presents its own set of three randomized starter choices. The player chooses one Pokémon in Hoenn and one Pokémon in Sinnoh, for two starter selections total across the adventure. All six offered Pokémon are distinct across both regions, excluding unsupported and banned species. The long-term design uses a run seed and separate starter streams for Hoenn and Sinnoh. The current engine integration now generates a fresh trio of distinct non-Legendary base species at runtime whenever a new game enters the starter-selection screen. The chosen Pokémon is then saved as part of that playthrough. The second regional starter screen and persistent two-region starter grants remain future engine work; the Python rules prototype defines and tests the six-choice result.
 
 ## Legendary distribution
 
