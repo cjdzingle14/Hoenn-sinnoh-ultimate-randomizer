@@ -15,9 +15,8 @@ def palette_report(path: Path) -> tuple[str, int | None, bool]:
     with Image.open(path) as image:
         mode = image.mode
         if mode == "P":
-            palette = image.getpalette()
-            colors = len(set(tuple(palette[i:i + 3]) for i in range(0, len(palette or []), 3)
-                             if len(palette[i:i + 3]) == 3))
+            used_colors = image.getcolors(maxcolors=256)
+            colors = len(used_colors or [])
             transparent = "transparency" in image.info
             return mode, colors, transparent
         if mode in ("RGBA", "LA"):
