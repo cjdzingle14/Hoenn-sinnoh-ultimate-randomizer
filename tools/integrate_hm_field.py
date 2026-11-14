@@ -1,4 +1,4 @@
-"""Build-time overlay unlocking HM field actions from HM ownership, not badges or party moves."""
+"""Build-time overlay requiring HM ownership and preserving the original badge gate for field moves."""
 from __future__ import annotations
 
 import argparse
@@ -27,7 +27,9 @@ FIELD_NEW = """static enum Item GetHMItemForFieldMove(enum FieldMove fieldMove)
 static bool32 HasHMItemForFieldMove(enum FieldMove fieldMove)
 {
     enum Item item = GetHMItemForFieldMove(fieldMove);
-    return item != ITEM_NONE && CheckBagHasItem(item, 1);
+    return item != ITEM_NONE
+        && CheckBagHasItem(item, 1)
+        && FlagGet(gFieldMoveInfo[fieldMove].arg + FLAG_BADGE01_GET);
 }"""
 
 PARTY_OLD = """static void SetPartyMonFieldSelectionActions(struct Pokemon *mons, u8 slotId)
