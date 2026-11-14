@@ -46,7 +46,7 @@
 - [ ] Audit the final Hoenn and imported Sinnoh map data and assign exact map IDs/coordinates to the 12 planned grotto landmarks.
 - [ ] Add concealed entrances and environmental clues at the locations in docs/SECRET_GROTTO_GUIDE.md.
 - [ ] Add a grotto interaction/event system separate from ordinary wild encounter tables.
-- [ ] Add per-grotto deterministic random streams, encounter tables, rarity tiers, and rare-item outcomes.
+- [x] Add a tested Python rule layer for reproducible per-grotto outcome selection using independent deterministic streams.\n- [ ] Connect per-grotto rules to in-game event scripts, encounter tables, rarity tiers, and rare-item outcomes.
 - [ ] Add catchable Ultra Beast encounters and confirm every selected species is supported by the pinned engine.
 - [ ] Add in-game hints and keep the spoiler guide synchronized with final map coordinates.
 - [ ] Test all entrances, region order independence, save/load, seed reproducibility, and story progression.
