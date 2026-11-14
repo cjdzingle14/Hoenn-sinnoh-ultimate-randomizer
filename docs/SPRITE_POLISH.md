@@ -29,12 +29,13 @@ python -m tools.sprite_polish --engine-dir vendor/pokeemerald-expansion
 python -m tools.sprite_polish --engine-dir vendor/pokeemerald-expansion --preview-dir /tmp/sprite-previews --scale 3
 ```
 
-- The audit reports non-indexed PNGs, palettes over 16 colors, and missing
-  transparency for manual inspection.
+- The audit checks explicit GBA-converted Pokémon PNGs (`*_gba.png`) for
+  more than 15 visible colors or missing transparent pixels. Source artwork
+  and non-GBA preview assets are deliberately excluded.
 - Preview output uses nearest-neighbor scaling only, preserving hard pixel
   edges. It writes to a separate directory and never overwrites source assets.
-- Warnings are review items, not automatic failures: some engine graphics may
-  intentionally use different formats or transparency conventions.
+- Warnings are review items, not automatic failures; verify any flagged asset
+  against the engine's actual graphics conversion rules before changing it.
 
 ## Visual polish rules
 
