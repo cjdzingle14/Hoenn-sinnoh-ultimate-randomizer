@@ -4,19 +4,26 @@
 
 Use [RHH's pokeemerald-expansion](https://github.com/rh-hideout/pokeemerald-expansion) as the game engine, as selected in the project design.
 
-The upstream project is a decompilation-based GBA ROM-hack development base, not a ready-to-play game. It must be cloned with Git so its commit history and branches are retained. Follow the upstream [installation and build guide](https://github.com/rh-hideout/pokeemerald-expansion/blob/master/INSTALL.md) for the developer's operating system and toolchain.
+The upstream project is a decompilation-based GBA ROM-hack development base, not a ready-to-play game. It is included in this repository as a Git submodule at `vendor/pokeemerald-expansion`, pinned to commit `4da9230cf7c1f1d7b0d47b45783b202666fffece`. See [UPSTREAM.md](UPSTREAM.md) for recursive clone instructions and the baseline build gate.
 
-**Do not copy a commercial Pokémon ROM into this repository.** Each developer must supply any legally obtained source assets or ROM data required by their own local workflow. Do not commit copyrighted ROMs or compiled game images.
+**Do not copy a commercial Pokémon ROM into this repository.** Users must supply any legally obtained source assets or ROM data required by their own local workflow. Do not commit copyrighted ROMs or compiled game images.
 
 ## Repository status and integration boundary
 
-At this stage this repository contains a Python randomizer starter archive, project notes, and a GitHub Actions test workflow. It does not yet contain the pokeemerald-expansion source tree. The Python starter and the ROM-hack engine are related project components, but they are not interchangeable:
+This repository now contains:
+- A Python randomizer package with deterministic selection primitives.
+- Validated settings, progression scoring, Gym-tier selection, starter filtering, and legendary placement rules.
+- Unit tests and GitHub Actions CI.
+- The pinned pokeemerald-expansion Git submodule.
+- Project design and integration documentation.
 
-- The engine contains the game code, maps, scripts, data tables, graphics, and build system.
-- The randomizer tooling will eventually generate or apply reproducible changes to supported engine data.
-- Shared design/configuration documents should define the intended behavior so that engine changes and randomizer output stay consistent.
+The engine submodule is present but its unmodified baseline build has not yet been run. The Python randomizer and the ROM-hack engine are related project components, but they are not interchangeable:
 
-Do not claim a playable ROM or an engine integration exists until the upstream source has been added and a clean build has succeeded.
+- The engine contains game code, maps, scripts, data tables, graphics, and the build system.
+- The randomizer tooling will generate or apply reproducible changes to supported engine data.
+- Shared design/configuration documents define intended behavior so engine changes and randomizer output stay consistent.
+
+Do not claim a playable ROM or engine integration is complete until the upstream baseline and modified game both build successfully.
 
 ## Target game structure
 
@@ -28,46 +35,56 @@ The design target is one adventure with both Hoenn and Sinnoh available as main-
 2. **Scaled Gym progression:** Gym leaders and major trainers scale according to the player's progression state, not simply a fixed region order.
 3. **Randomized starters:** starter choices are selected from the configured eligible pool using a reproducible seed.
 4. **Legendary encounters anywhere:** legendary species can be assigned to eligible encounter locations throughout the supported world, subject to configurable encounter rules.
-5. **Broad Pokédex coverage:** target all Pokémon supported by the chosen expansion version. Exact species/form coverage must be validated against that version's data.
-6. **Mega Evolution:** include Mega Evolution in the design, subject to the selected engine version's supported mechanics and a verified implementation.
+5. **Broad Pokédex coverage:** target all Pokémon supported by the pinned expansion version. Exact species/form coverage must be validated against that version's data.
+6. **Mega Evolution:** include Mega Evolution in the design, subject to the selected engine revision's supported mechanics and a verified implementation.
 
 ## Proposed architecture
 
 Keep the project in separable layers:
 
-- **Upstream engine:** the pinned pokeemerald-expansion revision and its native C/data/build structure.
+- **Upstream engine:** pinned pokeemerald-expansion revision and its native C/data/build structure.
 - **Game data layer:** declarative tables for region/map metadata, Gym progression tiers, starter pools, legendary eligibility, and species/form support.
 - **Randomizer core:** deterministic algorithms that accept a seed and validated configuration, then produce a change plan.
 - **Engine adapter:** translates the change plan into the exact data/script formats used by the pinned engine revision. It must fail safely when a target symbol, map, species, or table is missing.
 - **Validation:** unit tests for rules plus integration checks against the checked-out engine data.
-- **Build and packaging:** a reproducible build that outputs a patch or build artifact without committing a copyrighted base ROM.
+- **Build and packaging:** reproducible build that outputs a patch or build artifact without committing a copyrighted base ROM.
 
 ## Implementation sequence
 
-### Phase 0 — establish a buildable foundation
-- Preserve the existing Python starter and its tests.
-- Add the upstream project as a Git submodule or documented Git remote after choosing and pinning a stable upstream revision.
-- Verify the upstream engine builds unchanged before making game modifications.
-- Record the exact upstream revision and toolchain in the repository.
+### Phase 0 — repository foundation
+- [x] Record agreed game design and feature requirements.
+- [x] Add the Python randomizer package and settings.
+- [x] Add deterministic rules and unit tests.
+- [x] Add GitHub Actions CI.
+- [x] Add pokeemerald-expansion as a pinned Git submodule.
+- [ ] Run an unchanged upstream baseline build and record toolchain details.
 
-### Phase 1 — inventory and data model
-- Inventory the engine's species, forms, maps, warps, encounter tables, Gym leaders, and progression flags.
+### Phase 1 — engine inventory
+- Inventory engine species, forms, maps, warps, encounter tables, Gym leaders, and progression flags.
 - Define stable internal IDs for Hoenn and Sinnoh map/route metadata.
-- Add schema validation for the game configuration.
+- Define schema validation for engine-backed game configuration.
 - Build a map/warp graph and test that both regions are reachable.
 
-### Phase 2 — progression and content systems
-- Implement a progression-state model for scaled Gyms and major battles.
-- Implement seeded starter selection and verify identical output for identical seeds.
-- Implement legendary placement with eligibility constraints and collision checks.
-- Verify species and form coverage against the engine's actual data.
+### Phase 2 — world and progression
+- Design Sinnoh map import strategy and map ID allocation.
+- Add a region travel hub and test transitions, save/load, and return paths.
+- Namespace story flags to prevent Hoenn/Sinnoh collisions.
+- Implement global progression and scaled Gym rosters.
+- Test visiting Gyms in either regional order.
 
-### Phase 3 — Mega Evolution and integration
-- Confirm the pinned engine revision's Mega Evolution support and identify any gaps.
-- Integrate Mega Evolution without duplicating existing engine functionality.
-- Add engine-adapter changes and integration tests.
+### Phase 3 — randomizer integration
+- Implement engine data extraction and adapter.
+- Randomize three distinct starter choices.
+- Randomize eligible wild encounters.
+- Place legendary species in eligible slots with rarity and duplicate controls.
+- Preserve required story encounters by default.
 
-### Phase 4 — build, patch, and release
+### Phase 4 — Mega Evolution and coverage
+- Confirm supported upstream Mega Evolution implementation and data.
+- Verify species, forms, stones, abilities, and battle hooks.
+- Validate species/form coverage against the pinned engine.
+
+### Phase 5 — build, test, and release
 - Build the unmodified engine, then the modified game.
 - Run automated checks for map connectivity, progression reachability, encounter validity, and deterministic randomization.
 - Produce a patch workflow for users to apply to their own legally obtained base files.
@@ -75,8 +92,8 @@ Keep the project in separable layers:
 
 ## Technical constraints
 
-- Pin the upstream engine revision; do not build against a moving branch without recording the exact commit.
-- Never assume that every modern Pokémon feature fits in the GBA engine's memory or ROM layout. Check engine limits and build output.
+- Keep the upstream engine revision pinned; do not build against a moving branch without recording the exact commit.
+- Never assume every modern Pokémon feature fits in the GBA engine's memory or ROM layout. Check engine limits and build output.
 - Treat map connectivity and progression reachability as testable graph problems.
 - Keep randomization deterministic: the same configuration and seed must produce the same result.
 - Never silently discard unsupported species, forms, moves, abilities, or items; report them in a validation summary.
@@ -84,4 +101,4 @@ Keep the project in separable layers:
 
 ## Current next step
 
-The next meaningful milestone is to establish a real checkout of pokeemerald-expansion and verify its baseline build. The GitHub file-editing connection can maintain source files and documentation, but a full native engine build requires a build environment with Git, make, and the supported ARM toolchain. That build must be run and its result checked before engine implementation is considered validated.
+The upstream source is now pinned as a Git submodule. The next major milestone is to clone this repository recursively in a supported development environment, install the pinned engine's toolchain, and run an unchanged baseline build. Only after that succeeds should engine-specific modifications begin.
