@@ -9,7 +9,7 @@ class EncounterIntegrationTests(unittest.TestCase):
                 {"min_level": 2, "max_level": 3, "species": "SPECIES_WURMPLE"}
             ]}
         }]}]}
-        count = randomize_wild_data(data, ["SPECIES_TREECKO", "SPECIES_TURTWIG"], "test")
+        count = randomize_wild_data(data, ["SPECIES_TREECKO", "SPECIES_TURTWIG", "SPECIES_POOCHYENA"], "test")
         self.assertEqual(count, 1)
         mon = data["wild_encounter_groups"][0]["encounters"][0]["land_mons"]["mons"][0]
         self.assertIn(mon["species"], {"SPECIES_TREECKO", "SPECIES_TURTWIG"})
