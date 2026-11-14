@@ -23,7 +23,7 @@ WO_CHIEN CHIEN_PAO TING_LU CHI_YU KORAIDON MIRAIDON OKIDOGI MUNKIDORI FEZANDIPIT
 
 def parse_species_constants(header: str) -> list[str]:
     found = {}
-    for name, number in re.findall(r"^\\s*SPECIES_([A-Z0-9_]+)\\s*=\\s*(\\d+)\\s*,", header, re.M):
+    for name, number in re.findall(r"^\s*SPECIES_([A-Z0-9_]+)\s*=\s*(\d+)\s*,", header, re.M):
         dex = int(number)
         if 1 <= dex <= 1025 and name not in EXCLUDED:
             found.setdefault(dex, "SPECIES_" + name)
@@ -60,7 +60,7 @@ def _species_line(line: str, names: set[str]) -> tuple[str, str] | None:
     if not stripped or stripped.startswith(("#", "/*", "*", "//")) or ":" in stripped:
         return None
     # Competitive syntax permits Nickname (Species) (M) @ Item.
-    match = re.search(r"\\((SPECIES_[A-Z0-9_]+|[^()]+)\\)", stripped)
+    match = re.search(r"\((SPECIES_[A-Z0-9_]+|[^()]+)\)", stripped)
     candidate = match.group(1).strip() if match else stripped.split(" @ ", 1)[0].split(" (", 1)[0].strip()
     normalized = candidate.upper().replace(" ", "_").replace("-", "_").replace("'", "")
     if normalized.startswith("SPECIES_"):
@@ -77,7 +77,7 @@ def randomize_trainer_parties(source: str, species: list[str], seed: str) -> tup
     slot = 0
     changed = 0
     for line in source.splitlines(keepends=True):
-        header = re.match(r"^===\\s*(.*?)\\s*===", line)
+        header = re.match(r"^===\s*(.*?)\s*===", line)
         if header:
             current_trainer = header.group(1)
             slot = 0
@@ -89,7 +89,7 @@ def randomize_trainer_parties(source: str, species: list[str], seed: str) -> tup
             rng = rng_for(seed, f"trainer:{current_trainer}:{slot}")
             replacement = species[rng.randrange(len(species))]
             # Trainer-party preprocessor accepts SPECIES_* constants directly.
-            newline = "\\n" if line.endswith("\\n") else ""
+            newline = "\n" if line.endswith("\n") else ""
             output.append(replacement + newline)
             slot += 1
             changed += 1
@@ -117,7 +117,7 @@ def main() -> None:
     wild_path = args.engine_dir / "src/data/wild_encounters.json"
     wild = json.loads(wild_path.read_text(encoding="utf-8"))
     wild_count = randomize_wild_data(wild, pool, seed)
-    wild_path.write_text(json.dumps(wild, indent=2) + "\\n", encoding="utf-8")
+    wild_path.write_text(json.dumps(wild, indent=2) + "\n", encoding="utf-8")
 
     trainer_path = args.engine_dir / "src/data/trainers.party"
     trainer_source = trainer_path.read_text(encoding="utf-8")
