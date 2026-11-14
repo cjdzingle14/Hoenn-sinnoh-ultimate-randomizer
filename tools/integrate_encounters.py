@@ -1,4 +1,4 @@
-"""Build-time wild encounter and trainer party randomization overlays."""
+"""Rival gift integration and legacy deterministic randomization helpers."""
 from __future__ import annotations
 
 import argparse
@@ -128,28 +128,15 @@ def increase_rival_pokeball_gift(script: str, amount: int = 10) -> tuple[str, in
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--engine-dir", type=Path, required=True)
-    parser.add_argument("--seed", default=None)
     args = parser.parse_args()
-    settings = json.loads(Path("config/randomizer.json").read_text(encoding="utf-8"))
-    seed = args.seed or settings["seed"]
-    header = (args.engine_dir / "include/constants/species.h").read_text(encoding="utf-8")
-    pool = parse_species_constants(header)
 
-    wild_path = args.engine_dir / "src/data/wild_encounters.json"
-    wild = json.loads(wild_path.read_text(encoding="utf-8"))
-    wild_count = randomize_wild_data(wild, pool, seed)
-    wild_path.write_text(json.dumps(wild, indent=2) + "\n", encoding="utf-8")
-
-    trainer_path = args.engine_dir / "src/data/trainers.party"
-    trainer_source = trainer_path.read_text(encoding="utf-8")
-    trainer_result, trainer_count = randomize_trainer_parties(trainer_source, pool, seed)
-    trainer_path.write_text(trainer_result, encoding="utf-8")
-
+    # Wild and trainer species are now randomized at runtime. Keeping the
+    # upstream source tables intact lets the in-game settings restore vanilla.
     rival_script_path = args.engine_dir / "data/maps/LittlerootTown_ProfessorBirchsLab/scripts.inc"
     rival_script = rival_script_path.read_text(encoding="utf-8")
     rival_script, rival_gifts = increase_rival_pokeball_gift(rival_script, 10)
     rival_script_path.write_text(rival_script, encoding="utf-8")
-    print(f"Randomized {wild_count} wild slots and {trainer_count} trainer Pokémon; rival gifts: {rival_gifts} x 10 Poké Balls (seed={seed})")
+    print(f"Configured rival gift: {rival_gifts} scripts now give 10 Poké Balls")
 
 
 if __name__ == "__main__":
