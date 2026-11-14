@@ -96,7 +96,9 @@ static void SetPartyMonFieldSelectionActions(struct Pokemon *mons, u8 slotId)
             }
         }
         hmItem = GetHMItemForFieldMove(j);
-        if (knowsMove || (hmItem != ITEM_NONE && CheckBagHasItem(hmItem, 1)))
+        if (IsFieldMoveUnlocked(j)
+            && hmItem != ITEM_NONE
+            && CheckBagHasItem(hmItem, 1))
             AppendToList(sPartyMenuInternal->actions, &sPartyMenuInternal->numActions, j + MENU_FIELD_MOVES);
     }
 
@@ -142,7 +144,7 @@ def main() -> None:
     parser.add_argument("--engine-dir", type=Path, required=True)
     args = parser.parse_args()
     integrate(args.engine_dir)
-    print("Integrated HM-item field unlocks without party HM moves or badge gates")
+    print("Integrated HM-item field unlocks while preserving badge requirements")
 
 
 if __name__ == "__main__":
