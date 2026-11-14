@@ -1,5 +1,5 @@
 import unittest
-from tools.integrate_encounters import randomize_wild_data, randomize_trainer_parties
+from tools.integrate_encounters import randomize_wild_data, randomize_trainer_parties, increase_rival_pokeball_gift
 
 class EncounterIntegrationTests(unittest.TestCase):
     def test_wild_randomization_preserves_levels_and_rates(self):
@@ -23,6 +23,19 @@ class EncounterIntegrationTests(unittest.TestCase):
         self.assertIn("Level: 7", patched)
         self.assertNotIn("Poochyena", patched)
         self.assertTrue(any(x in patched for x in ["SPECIES_TREECKO", "SPECIES_TURTWIG"]))
+
+
+    def test_both_rival_variants_give_ten_pokeballs(self):
+        source = (
+            "LittlerootTown_ProfessorBirchsLab_EventScript_MayGivePokeBalls::\\n"
+            "\\tgiveitem ITEM_POKE_BALL, 5\\n"
+            "LittlerootTown_ProfessorBirchsLab_EventScript_BrendanGivePokeBalls::\\n"
+            "\\tgiveitem ITEM_POKE_BALL, 5\\n"
+        )
+        patched, count = increase_rival_pokeball_gift(source, 10)
+        self.assertEqual(count, 2)
+        self.assertEqual(patched.count("giveitem ITEM_POKE_BALL, 10"), 2)
+        self.assertNotIn("giveitem ITEM_POKE_BALL, 5", patched)
 
 if __name__ == "__main__":
     unittest.main()
