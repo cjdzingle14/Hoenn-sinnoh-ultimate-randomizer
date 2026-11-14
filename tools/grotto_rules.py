@@ -24,7 +24,8 @@ def choose_grotto_outcome(grotto_id: str, *, seed: str, ultra_beasts: Sequence[T
     if chances["rare_item"] and not rare_items:
         raise ValueError("rare_items pool cannot be empty when its weight is positive")
     stream = f"grotto:{grotto_id}"
-    active_chances = {kind: weight for kind, weight in chances.items() if weight > 0}\n    outcome = weighted_choice(active_chances, seed=seed, stream=f"{stream}:outcome")
+    active_chances = {kind: weight for kind, weight in chances.items() if weight > 0}
+    outcome = weighted_choice(active_chances, seed=seed, stream=f"{stream}:outcome")
     if outcome == "empty":
         return outcome, None
     pool = ultra_beasts if outcome == "ultra_beast" else rare_items
