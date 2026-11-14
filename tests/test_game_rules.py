@@ -1,9 +1,8 @@
-import json
-import tempfile
 import unittest
 from pathlib import Path
 
 from tools.game_rules import (
+    choose_regional_starters,
     choose_starters,
     gym_tier_for_progress,
     load_settings,
@@ -24,7 +23,13 @@ class GameRulesTests(unittest.TestCase):
             "schema_version": 1,
             "world": {"mode": "separate", "regions": ["hoenn"], "travel_unlocked_at_start": False},
             "gym_progression": {"mode": "scaled", "tier_thresholds": [0, 2, 2]},
-            "starters": {"mode": "random_three_distinct"},
+            "starters": {
+                "mode": "random_three_per_region",
+                "regions": ["hoenn", "sinnoh"],
+                "choices_per_region": 3,
+                "player_picks_per_region": 1,
+                "unique_across_both_regions": True,
+            },
             "encounters": {"legendary_duplicate_policy": "allow"},
             "mega_evolution": {"enabled": True},
         }
@@ -48,6 +53,25 @@ class GameRulesTests(unittest.TestCase):
         self.assertEqual(len(set(result)), 3)
         self.assertNotIn("Treecko", result)
         self.assertEqual(result, choose_starters(pool, seed="alpha", banned_species={"Treecko"}))
+
+    def test_each_region_gets_three_choices_and_all_six_are_unique(self):
+        pool = [
+            "Treecko", "Torchic", "Mudkip", "Turtwig", "Chimchar", "Piplup",
+            "Bulbasaur", "Charmander", "Squirtle", "Chikorita", "Cyndaquil", "Totodile",
+        ]
+        result = choose_regional_starters(pool, seed="two-region-run")
+        self.assertEqual(set(result), {"hoenn", "sinnoh"})
+        self.assertEqual(len(result["hoenn"]), 3)
+        self.assertEqual(len(result["sinnoh"]), 3)
+        self.assertEqual(len(set(result["hoenn"] + result["sinnoh"])), 6)
+        self.assertEqual(result, choose_regional_starters(pool, seed="two-region-run"))
+
+    def test_regional_starters_exclude_banned_and_require_six_eligible(self):
+        pool = ["A", "B", "C", "D", "E", "F", "BANNED"]
+        result = choose_regional_starters(pool, seed="regional", banned_species={"BANNED"})
+        self.assertEqual(len(set(result["hoenn"] + result["sinnoh"])), 6)
+        with self.assertRaises(ValueError):
+            choose_regional_starters(pool[:5], seed="too-small")
 
     def test_legendary_slots_respect_protected_story_encounters(self):
         result = place_legendary_encounters(
