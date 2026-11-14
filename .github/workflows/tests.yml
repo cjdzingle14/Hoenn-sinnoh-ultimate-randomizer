@@ -39,6 +39,8 @@ jobs:
       - name: Build custom engine ROM
         working-directory: vendor/pokeemerald-expansion
         run: make -j2
+      - name: Validate standard GBA header for emulator compatibility
+        run: python -m tools.validate_gba_rom vendor/pokeemerald-expansion/pokeemerald.gba
       - name: Upload custom starter-integration ROM
         uses: actions/upload-artifact@v4
         with:
