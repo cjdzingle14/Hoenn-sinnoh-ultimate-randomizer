@@ -2,9 +2,9 @@ name: Project tests and custom engine build
 
 on:
   push:
-    branches: [main]
+    branches: [main, overworld/hd-inspired-palette-pass]
   pull_request:
-    branches: [main]
+    branches: [main, test4/sprite-polish-pipeline]
   workflow_dispatch:
 
 jobs:
@@ -38,6 +38,10 @@ jobs:
         run: |
           git -C vendor/pokeemerald-expansion rev-parse HEAD
           arm-none-eabi-gcc --version
+      - name: Apply HD-inspired overworld tileset palette polish
+        run: python -m tools.integrate_overworld_polish --engine-dir vendor/pokeemerald-expansion
+      - name: Apply HD-inspired overworld tileset palette polish
+        run: python -m tools.integrate_overworld_polish --engine-dir vendor/pokeemerald-expansion
       - name: Apply per-new-game randomized starter choices
         run: python -m tools.integrate_starters --engine-dir vendor/pokeemerald-expansion
       - name: Integrate runtime wild and trainer randomization
