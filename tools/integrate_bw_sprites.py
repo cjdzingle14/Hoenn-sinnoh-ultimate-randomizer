@@ -73,10 +73,10 @@ def _download(url: str, destination: Path, attempts: int = 3) -> bool:
 
 def _source_paths(dex: int) -> dict[str, str]:
     return {
+        "front_animated": f"{SOURCE_ROOT}/animated/{dex}.gif",
         "front": f"{SOURCE_ROOT}/{dex}.png",
         "back": f"{SOURCE_ROOT}/back/{dex}.png",
         "shiny_front": f"{SOURCE_ROOT}/shiny/{dex}.png",
-        "shiny_back": f"{SOURCE_ROOT}/back/shiny/{dex}.png",
         "icon": (
             "https://raw.githubusercontent.com/PokeAPI/sprites/"
             f"{SOURCE_REVISION}/sprites/pokemon/versions/generation-v/icons/{dex}.png"
@@ -85,7 +85,7 @@ def _source_paths(dex: int) -> dict[str, str]:
 
 
 def fit_to_box(source: Image.Image, size: tuple[int, int]) -> Image.Image:
-    """Fit a transparent sprite into the existing engine canvas, centered."""
+    """Fit a transparent sprite into one existing engine frame, centered."""
     image = source.convert("RGBA")
     bounds = image.getchannel("A").getbbox()
     if bounds:
@@ -101,6 +101,30 @@ def fit_to_box(source: Image.Image, size: tuple[int, int]) -> Image.Image:
         resized, ((width - resized.width) // 2, (height - resized.height) // 2)
     )
     return canvas
+
+
+def fit_front_sheet(source_path: Path, size: tuple[int, int]) -> Image.Image:
+    """Build the engine's two-frame vertical sheet from an animated GIF or static PNG."""
+    width, height = size
+    frame_size = (width, height // 2) if height == width * 2 else size
+    frames = []
+    with Image.open(source_path) as source:
+        if getattr(source, "is_animated", False):
+            for frame_index in range(min(2, getattr(source, "n_frames", 1))):
+                source.seek(frame_index)
+                frames.append(fit_to_box(source.convert("RGBA"), frame_size))
+        else:
+            frames.append(fit_to_box(source.convert("RGBA"), frame_size))
+    if not frames:
+        raise ValueError(f"no usable animation frames in {source_path}")
+    while len(frames) < 2 and height == width * 2:
+        frames.append(frames[0].copy())
+    if height != width * 2:
+        return frames[0]
+    sheet = Image.new("RGBA", size, (0, 0, 0, 0))
+    sheet.alpha_composite(frames[0], (0, 0))
+    sheet.alpha_composite(frames[1], (0, frame_size[1]))
+    return sheet
 
 
 def make_palette(front: Image.Image) -> list[tuple[int, int, int]]:
@@ -163,7 +187,7 @@ def _open_fit(path: Path, size: tuple[int, int]) -> Image.Image:
 
 
 def integrate_species(directory: Path, dex: int, cache: Path) -> bool:
-    """Replace front/back normal and shiny art for one species."""
+    """Replace front/back normal and shiny palette art for one species."""
     front_target, back_target = directory / "anim_front.png", directory / "back.png"
     if not front_target.exists() or not back_target.exists():
         return False
@@ -173,18 +197,32 @@ def integrate_species(directory: Path, dex: int, cache: Path) -> bool:
         back_size = current.size
 
     source_files: dict[str, Path] = {}
-    for key, url in _source_paths(dex).items():
+    paths = _source_paths(dex)
+    animated_path = cache / "front_animated" / f"{dex}.gif"
+    if _download(paths["front_animated"], animated_path):
+        source_files["front_animated"] = animated_path
+    else:
+        static_path = cache / "front" / f"{dex}.png"
+        if not _download(paths["front"], static_path):
+            return False
+        source_files["front"] = static_path
+
+    for key in ("back", "shiny_front", "icon"):
         target = cache / key / f"{dex}.png"
-        if not _download(url, target):
+        if not _download(paths[key], target):
             if key == "icon":
                 continue
             return False
         source_files[key] = target
 
-    normal_front = _open_fit(source_files["front"], front_size)
+    front_source = source_files.get("front_animated", source_files.get("front"))
+    normal_front = fit_front_sheet(front_source, front_size)
     normal_back = _open_fit(source_files["back"], back_size)
-    shiny_front = _open_fit(source_files["shiny_front"], front_size)
-    shiny_back = _open_fit(source_files["shiny_back"], back_size)
+    shiny_frame_size = (
+        front_size[0],
+        front_size[1] // 2 if front_size[1] == front_size[0] * 2 else front_size[1],
+    )
+    shiny_front = _open_fit(source_files["shiny_front"], shiny_frame_size)
     normal_colors, shiny_colors = make_palette(normal_front), make_palette(shiny_front)
 
     replacements = {
@@ -196,7 +234,7 @@ def integrate_species(directory: Path, dex: int, cache: Path) -> bool:
     if "icon" in source_files and (directory / "icon.png").exists():
         with Image.open(directory / "icon.png") as current_icon:
             icon_size = current_icon.size
-        icon = _open_fit(source_files["icon"], icon_size)
+        icon = fit_front_sheet(source_files["icon"], icon_size)
         replacements["icon.png"] = icon
         replacements["icon_gba.png"] = indexed_gba(icon, make_palette(icon))
 
