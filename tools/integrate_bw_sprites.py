@@ -28,7 +28,7 @@ MAX_VISIBLE_COLORS = 15
 def parse_species(species_header: str) -> list[tuple[int, str]]:
     """Return one base species constant for each National Dex number."""
     found: dict[int, str] = {}
-    pattern = re.compile(r"^\\s*SPECIES_([A-Z0-9_]+)\\s*=\\s*(\\d+)\\s*,", re.MULTILINE)
+    pattern = re.compile(r"^\s*SPECIES_([A-Z0-9_]+)\s*=\s*(\d+)\s*,", re.MULTILINE)
     for name, raw_number in pattern.findall(species_header):
         number = int(raw_number)
         if 1 <= number <= MAX_DEX:
@@ -154,7 +154,7 @@ def indexed_gba(image: Image.Image, colors: list[tuple[int, int, int]]) -> Image
 def write_jasc_palette(path: Path, colors: list[tuple[int, int, int]]) -> None:
     lines = ["JASC-PAL", "0100", "16"]
     lines.extend(f"{red} {green} {blue}" for red, green, blue in colors)
-    path.write_text("\\n".join(lines) + "\\n", encoding="utf-8")
+    path.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
 def _open_fit(path: Path, size: tuple[int, int]) -> Image.Image:
