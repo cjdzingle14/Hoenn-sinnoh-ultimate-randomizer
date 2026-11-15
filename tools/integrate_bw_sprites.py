@@ -225,21 +225,25 @@ def integrate_species(directory: Path, dex: int, cache: Path) -> bool:
     shiny_front = _open_fit(source_files["shiny_front"], shiny_frame_size)
     normal_colors, shiny_colors = make_palette(normal_front), make_palette(shiny_front)
 
+    front_indexed = indexed_gba(normal_front, normal_colors)
+    back_indexed = indexed_gba(normal_back, normal_colors)
     replacements = {
-        "anim_front.png": normal_front,
-        "back.png": normal_back,
-        "anim_front_gba.png": indexed_gba(normal_front, normal_colors),
-        "back_gba.png": indexed_gba(normal_back, normal_colors),
+        "anim_front.png": front_indexed,
+        "back.png": back_indexed,
+        "anim_front_gba.png": front_indexed,
+        "back_gba.png": back_indexed,
     }
     if "icon" in source_files and (directory / "icon.png").exists():
         with Image.open(directory / "icon.png") as current_icon:
             icon_size = current_icon.size
         icon = fit_front_sheet(source_files["icon"], icon_size)
-        replacements["icon.png"] = icon
-        replacements["icon_gba.png"] = indexed_gba(icon, make_palette(icon))
+        icon_indexed = indexed_gba(icon, make_palette(icon))
+        replacements["icon.png"] = icon_indexed
+        replacements["icon_gba.png"] = icon_indexed
 
     for name, image in replacements.items():
-        image.save(directory / name, format="PNG")
+        # The engine's gbagfx requires 4-bit indexed PNGs (PNG color type 3).
+        image.save(directory / name, format="PNG", bits=4, transparency=0)
     write_jasc_palette(directory / "normal.pal", normal_colors)
     write_jasc_palette(directory / "normal_gba.pal", normal_colors)
     write_jasc_palette(directory / "shiny.pal", shiny_colors)
