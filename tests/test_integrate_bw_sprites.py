@@ -31,6 +31,18 @@ def test_fit_to_box_preserves_aspect_and_transparency():
     assert result.getpixel((16, 16)) == (255, 0, 0, 255)
 
 
+def test_fit_to_box_antialiases_diagonal_edges_without_color_fringes():
+    source = Image.new("RGBA", (8, 8), (0, 0, 0, 0))
+    for y in range(8):
+        for x in range(y + 1):
+            source.putpixel((x, y), (240, 40, 20, 255))
+    result = fit_to_box(source, (13, 13))
+    alpha_values = {pixel[3] for pixel in result.getdata()}
+    assert any(0 < alpha < 255 for alpha in alpha_values)
+    visible = [pixel for pixel in result.getdata() if pixel[3] > 0]
+    assert all(pixel[0] >= pixel[1] and pixel[0] >= pixel[2] for pixel in visible)
+
+
 def test_front_gif_keeps_two_vertical_animation_frames(tmp_path: Path):
     first = Image.new("RGBA", (24, 24), (255, 0, 0, 255))
     second = Image.new("RGBA", (24, 24), (0, 0, 255, 255))
@@ -46,11 +58,13 @@ def test_gba_conversion_reserves_palette_zero_for_transparency():
     source.putpixel((1, 0), (255, 0, 0, 255))
     source.putpixel((2, 0), (0, 255, 0, 255))
     source.putpixel((3, 0), (0, 0, 255, 255))
+    source.putpixel((0, 0), (0, 0, 0, 96))
     output = indexed_gba(source, make_palette(source))
     assert output.mode == "P"
     assert output.getpixel((0, 0)) == 0
     assert all(output.getpixel((x, 0)) > 0 for x in (1, 2, 3))
     assert output.info["transparency"] == 0
+    assert output.getpixel((0, 0)) == 0
 
 
 def test_jasc_palette_has_exactly_sixteen_entries(tmp_path: Path):
