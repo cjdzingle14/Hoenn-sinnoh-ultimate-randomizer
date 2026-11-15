@@ -150,8 +150,10 @@ def make_palette(front: Image.Image) -> list[tuple[int, int, int]]:
 
 def _palette_image(colors: list[tuple[int, int, int]]) -> Image.Image:
     palette = Image.new("P", (1, 1))
-    flat = [channel for color in colors[1:] for channel in color]
-    flat.extend([0] * (768 - len(flat)))
+    visible = colors[1:]
+    flat = [channel for color in visible for channel in color]
+    last_color = visible[-1]
+    flat.extend(list(last_color) * (256 - len(visible)))
     palette.putpalette(flat)
     return palette
 
