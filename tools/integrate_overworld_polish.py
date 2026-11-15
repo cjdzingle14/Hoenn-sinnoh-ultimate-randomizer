@@ -1,9 +1,4 @@
-"""Apply a restrained, GBA-safe color grade to overworld tileset palettes.
-
-The engine's tile graphics, metatile indices, collision attributes, and animations
-are left intact. Palette slot zero (transparent) and placeholder colors are
-preserved. The grade is quantized to the GBA's 5-bit-per-channel color range.
-"""
+"""Apply a restrained, GBA-safe color grade to overworld tileset palettes."""
 from __future__ import annotations
 
 import argparse
@@ -19,7 +14,7 @@ BRIGHTNESS = 2
 
 def _quantize_gba(channel: float) -> int:
     value = max(0, min(255, channel))
-    return max(0, min(248, round(value / 8) * 8)
+    return max(0, min(248, round(value / 8) * 8))
 
 
 def grade_rgb(rgb: tuple[int, int, int]) -> tuple[int, int, int]:
