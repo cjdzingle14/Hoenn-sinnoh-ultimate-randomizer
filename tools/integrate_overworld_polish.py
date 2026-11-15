@@ -19,7 +19,7 @@ BRIGHTNESS = 2
 
 def _quantize_gba(channel: float) -> int:
     value = max(0, min(255, channel))
-    return max(0, min(248, round(value / 8) * 8))
+    return max(0, min(248, round(value / 8) * 8)
 
 
 def grade_rgb(rgb: tuple[int, int, int]) -> tuple[int, int, int]:
@@ -47,7 +47,7 @@ def grade_palette_text(source: str) -> str:
     if any(len(rgb) != 3 or any(channel < 0 or channel > 255 for channel in rgb) for rgb in entries):
         raise ValueError("palette RGB values must contain three channels from 0 to 255")
     if all(rgb in PRESERVED_COLORS or all(channel % 8 == 0 for channel in rgb) for rgb in entries[1:]):
-        return source.rstrip() + "\\n"
+        return source.rstrip() + "\n"
     graded = []
     for index, rgb in enumerate(entries):
         if index == TRANSPARENT_INDEX or rgb in PRESERVED_COLORS:
@@ -56,7 +56,7 @@ def grade_palette_text(source: str) -> str:
             graded.append(grade_rgb(rgb))
     output = ["JASC-PAL", "0100", "16"]
     output.extend(f"{red} {green} {blue}" for red, green, blue in graded)
-    return "\\n".join(output) + "\\n"
+    return "\n".join(output) + "\n"
 
 
 def integrate(engine_dir: Path) -> tuple[int, int]:
