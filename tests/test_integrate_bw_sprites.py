@@ -97,5 +97,9 @@ def test_integrate_species_preserves_engine_dimensions_and_animation(tmp_path: P
     ):
         with Image.open(species / name) as image:
             assert image.size == size
+            assert image.mode == "P"
+        png = (species / name).read_bytes()
+        assert png[24] == 4  # 4-bit indexed color depth
+        assert png[25] == 3  # indexed PNG color type required by gbagfx
     for name in ("normal.pal", "normal_gba.pal", "shiny.pal", "shiny_gba.pal"):
         assert (species / name).read_text().splitlines()[2] == "16"
