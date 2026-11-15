@@ -86,10 +86,8 @@ def _source_paths(dex: int) -> dict[str, str]:
 
 def fit_to_box(source: Image.Image, size: tuple[int, int]) -> Image.Image:
     """Fit a transparent sprite into one existing engine frame, centered."""
+    # Keep the source canvas intact so adjacent animation frames retain alignment.
     image = source.convert("RGBA")
-    bounds = image.getchannel("A").getbbox()
-    if bounds:
-        image = image.crop(bounds)
     width, height = size
     scale = min(width / image.width, height / image.height)
     resized = image.resize(
