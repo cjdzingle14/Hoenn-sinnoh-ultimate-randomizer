@@ -14,26 +14,28 @@ A custom Pokémon GBA ROM-hack project targeting one adventure with both Hoenn a
 
 ## Current implementation
 
-The project now has its first engine gameplay integrations in CI. Before compiling, the workflow applies source overlays to the pinned engine. The starter overlay builds a pool of eligible non-Legendary base species and selects three distinct options using the game's runtime random-number generator whenever a new game enters starter selection. This avoids reusing the same build-time trio across every new save. The submodule remains pinned and unchanged in Git.
+The project applies engine source overlays during CI before compiling the ROM. The starter overlay selects three distinct eligible species at runtime for each new game. The build also integrates runtime wild/trainer randomization, reusable TMs, HM item-based field move access, a rival Poké Ball gift, and streamlined Nurse Joy healing.
 
-This is **not yet the completed two-region game**. Sinnoh maps and travel, live gym scaling, wild encounter randomization, legendary placement, and Hidden Grotto map/event integration still need engine integration.
+The graphics pipeline downloads pinned Gen V-style battle sprites at build time, converts them to the engine's existing GBA dimensions and 4bpp palette limits, and applies a restrained overworld tileset palette grade. It preserves the pinned engine submodule and does not commit downloaded sprite artwork.
+
+This is **not yet the completed two-region game**. Sinnoh maps and travel, live gym scaling, legendary placement, and Hidden Grotto map/event integration still need engine integration.
 
 ## Tests and build
 
 Requires Python 3.10 or newer.
 
-```bash
-python -m pip install pytest
+\`\`\`bash
+python -m pip install pytest Pillow
 python -m pytest -q
 python -m tools.integrate_starters --engine-dir vendor/pokeemerald-expansion
 make -C vendor/pokeemerald-expansion -j2
-```
+\`\`\`
 
-Starter choices now use runtime game randomness rather than the configured build seed. GitHub Actions builds and uploads the custom ROM on pushes to main.
+GitHub Actions applies the graphics and gameplay overlays, builds the custom ROM, validates its GBA header, and uploads a test artifact.
 
 ## Principles
 
-- Seeded subsystems remain reproducible where configured; starter choices are randomized at runtime for each new game.
+- Seeded subsystems remain reproducible where configured; starter choices are randomized at runtime for each new save.
 - Independent PRNG streams keep unrelated systems stable.
 - Validate settings and engine targets before changing game data.
 - Do not assume every modern feature fits GBA memory or ROM layout.
@@ -47,3 +49,4 @@ Starter choices now use runtime game randomness rather than the configured build
 - [Secret Grotto & Ultra Beast spoiler guide](docs/SECRET_GROTTO_GUIDE.md)
 - [Upstream engine pin and build status](docs/UPSTREAM.md)
 - [Sprite polish and display pipeline](docs/SPRITE_POLISH.md)
+- [HD-inspired overworld palette pass](docs/OVERWORLD_POLISH.md)
