@@ -23,6 +23,7 @@ SOURCE_ROOT = (
 )
 MAX_DEX = 1025
 MAX_VISIBLE_COLORS = 15
+EDGE_ALPHA_THRESHOLD = 128
 
 
 def parse_species(species_header: str) -> list[tuple[int, str]]:
@@ -90,10 +91,12 @@ def fit_to_box(source: Image.Image, size: tuple[int, int]) -> Image.Image:
     image = source.convert("RGBA")
     width, height = size
     scale = min(width / image.width, height / image.height)
-    resized = image.resize(
+    # Premultiplied Lanczos resampling smooths diagonal contours without
+    # pulling dark RGB fringes from fully transparent source pixels.
+    resized = image.convert("RGBa").resize(
         (max(1, round(image.width * scale)), max(1, round(image.height * scale))),
-        Image.Resampling.NEAREST,
-    )
+        Image.Resampling.LANCZOS,
+    ).convert("RGBA")
     canvas = Image.new("RGBA", size, (0, 0, 0, 0))
     canvas.alpha_composite(
         resized, ((width - resized.width) // 2, (height - resized.height) // 2)
@@ -165,7 +168,7 @@ def indexed_gba(image: Image.Image, colors: list[tuple[int, int, int]]) -> Image
     indices = bytearray(quantized.tobytes())
     alpha = rgba.getchannel("A").tobytes()
     for index, opacity in enumerate(alpha):
-        indices[index] = 0 if opacity == 0 else min(15, indices[index] + 1)
+        indices[index] = 0 if opacity < EDGE_ALPHA_THRESHOLD else min(15, indices[index] + 1)
     output = Image.new("P", rgba.size)
     flat = [channel for color in colors for channel in color]
     flat.extend([0] * (768 - len(flat)))
