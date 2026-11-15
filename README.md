@@ -46,4 +46,4 @@ Starter choices now use runtime game randomness rather than the configured build
 - [Implementation plan](docs/IMPLEMENTATION_PLAN.md)
 - [Secret Grotto & Ultra Beast spoiler guide](docs/SECRET_GROTTO_GUIDE.md)
 - [Upstream engine pin and build status](docs/UPSTREAM.md)
-- [Sprite polish and display pipeline](docs/SPRITE_POLISH.md)
+- [Sprite polish and display pipeline](docs/SPRITE_POLISH.md)\n- [HD-inspired overworld palette pass](docs/OVERWORLD_POLISH.md)
