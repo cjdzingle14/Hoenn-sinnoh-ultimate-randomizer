@@ -2,7 +2,7 @@ name: Project tests and custom engine build
 
 on:
   push:
-    branches: [main]
+    branches: [main, overworld/hd-inspired-palette-pass]
   pull_request:
     branches: [main, test4/sprite-polish-pipeline]
   workflow_dispatch:
