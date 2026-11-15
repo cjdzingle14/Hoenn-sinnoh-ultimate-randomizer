@@ -12,7 +12,7 @@ def palette_text():
         (189, 189, 131), (115, 189, 246), (98, 172, 238), (115, 189, 246),
         (98, 164, 222), (82, 139, 197), (74, 115, 172), (115, 197, 164),
     ]
-    return "JASC-PAL\\n0100\\n16\\n" + "".join(f"{r} {g} {b}\\n" for r, g, b in colors)
+    return "JASC-PAL\n0100\n16\n" + "".join(f"{r} {g} {b}\n" for r, g, b in colors)
 
 
 def entries(text):
@@ -31,7 +31,7 @@ def test_grade_preserves_transparency_and_placeholder_colors():
 
 def test_grade_preserves_magenta_and_black_placeholders():
     colors = [(1, 2, 3), (255, 0, 255)] + [(0, 0, 0)] * 14
-    source = "JASC-PAL\\n0100\\n16\\n" + "".join(f"{r} {g} {b}\\n" for r, g, b in colors)
+    source = "JASC-PAL\n0100\n16\n" + "".join(f"{r} {g} {b}\n" for r, g, b in colors)
     after = entries(grade_palette_text(source))
     assert after[0] == (1, 2, 3)
     assert after[1:] == colors[1:]
