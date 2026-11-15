@@ -52,7 +52,7 @@ def grade_palette_text(source: str) -> str:
 
     # A fully quantized palette is already processed; this makes repeated local
     # runs safe and prevents progressively shifting the same colors.
-    if all(all(channel % 8 == 0 for channel in rgb) for rgb in entries):
+    if all(rgb in PRESERVED_COLORS or all(channel % 8 == 0 for channel in rgb) for rgb in entries[1:]):
         return source.rstrip() + "\n"
 
     graded = []
