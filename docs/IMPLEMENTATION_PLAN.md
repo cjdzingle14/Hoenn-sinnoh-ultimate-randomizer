@@ -32,14 +32,16 @@
 - Scale leader parties at battle setup; validate species, moves, items, and levels.
 - Test visiting Gyms in either regional order.
 
-## Phase 4 — randomization
+## Phase 4 — randomization and Pokédex
 
 - Parse a run seed and versioned settings.
 - Use independent PRNG streams per subsystem.
-- Randomize three distinct starter choices.
+- [ ] Implement two-stage Birch starter progression: initial randomized trio, then a second distinct trio after the Route 103 rival battle and return to the lab; persist both grants and prevent repeat claims.
 - Randomize eligible wild encounters.
 - Place legendary species in eligible slots with rarity and duplicate controls.
 - Preserve required story encounters by default.
+- [x] Add a National Pokédex overlay that enables National mode immediately after the new-game Pokédex reset; add source-patch tests and run it in the custom ROM workflow.
+- [ ] Verify National Dex registration, ordering, seen/caught counts, forms, and both starter grants in a built ROM.
 
 ## Phase 5 — Secret Hidden Grottos and Ultra Beasts
 
