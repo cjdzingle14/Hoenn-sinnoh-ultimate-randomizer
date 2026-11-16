@@ -8,7 +8,7 @@ on:
   push:
     branches: [main, test4/sprite-polish-pipeline, test5/two-stage-starters-national-dex]
   pull_request:
-    branches: [main]
+    branches: [main, test4/sprite-polish-pipeline]
   workflow_dispatch:
 
 jobs:
@@ -75,7 +75,7 @@ jobs:
       - name: Upload custom sprite-polish test ROM
         uses: actions/upload-artifact@v4
         with:
-          name: hoenn-sinnoh-sprite-polish-test-build
+          name: hoenn-sinnoh-test5-build
           path: vendor/pokeemerald-expansion/pokeemerald.gba
           if-no-files-found: error
           retention-days: 14
