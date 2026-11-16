@@ -1,7 +1,9 @@
 import unittest
 
 from tools.integrate_two_stage_starters import (
+    patch_battle_setup_source,
     patch_lab_script,
+    patch_specials_source,
     patch_starter_source,
     patch_vars_header,
 )
@@ -18,10 +20,11 @@ class TwoStageStarterIntegrationTests(unittest.TestCase):
         self.assertIn("VAR_TEST5_FIRST_STARTER_3", patched)
         self.assertIn("VAR_TEST5_STARTER_STAGE", patched)
 
-    def test_lab_offer_is_inserted_before_progression_advances(self):
+    def test_lab_offer_uses_second_starter_special_before_progression_advances(self):
         source = "call RivalGift\n\tsetvar VAR_BIRCH_LAB_STATE, 5\n"
         patched = patch_lab_script(source)
-        self.assertLess(patched.index("special ChooseStarter"), patched.index("setvar VAR_BIRCH_LAB_STATE, 5"))
+        self.assertLess(patched.index("special ChooseSecondStarter"), patched.index("setvar VAR_BIRCH_LAB_STATE, 5"))
+        self.assertNotIn("special ChooseStarter", patched)
 
     def test_source_persists_first_trio_and_excludes_it_from_second(self):
         source = '''
@@ -54,7 +57,33 @@ static void Task_HandleConfirmStarterInput(u8 taskId)
         self.assertIn("candidate == firstOffer[j]", patched)
         self.assertIn("VarSet(VAR_TEST5_STARTER_STAGE, 2)", patched)
         self.assertIn("sText_SecondStarterPrompt", patched)
-        self.assertIn("if (chosenStarterId", patched) if "if (chosenStarterId" in patched else None
+
+    def test_second_callback_grants_without_restarting_tutorial_battle(self):
+        source = """
+static void CB2_GiveStarter(void);
+static void CB2_StartFirstBattle(void)
+{
+}
+void ChooseStarter(void)
+{
+    SetMainCallback2(CB2_ChooseStarter);
+    gMain.savedCallback = CB2_GiveStarter;
+}
+static void CB2_GiveStarter(void)
+{
+    ScriptGiveMon(starterMon, 5, ITEM_NONE);
+    SetMainCallback2(CB2_StartFirstBattle);
+}
+"""
+        patched = patch_battle_setup_source(source)
+        self.assertIn("void ChooseSecondStarter(void)", patched)
+        self.assertIn("ScriptGiveMon(starterMon, 5, ITEM_NONE)", patched)
+        self.assertIn("CB2_ReturnToFieldContinueScriptPlayMapMusic", patched)
+        self.assertEqual(patched.count("SetMainCallback2(CB2_StartFirstBattle);"), 1)
+
+    def test_second_special_is_registered(self):
+        patched = patch_specials_source("def_special ChooseStarter, waitstate=1\n")
+        self.assertIn("def_special ChooseSecondStarter, waitstate=1", patched)
 
     def test_rejects_missing_progression_anchor(self):
         with self.assertRaises(ValueError):
