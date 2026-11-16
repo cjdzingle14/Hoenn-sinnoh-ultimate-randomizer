@@ -131,18 +131,63 @@ def patch_lab_script(source: str) -> str:
     return source.replace(
         anchor,
         "\t@ Second starter offer: this runs only on the first return after the Route 103 rival battle.\n"
-        "\tspecial ChooseStarter\n" + anchor,
+        "\tspecial ChooseSecondStarter\n" + anchor,
         1,
     )
 
+
+
+def patch_battle_setup_source(source: str) -> str:
+    """Add a second-starter callback that grants the Pokémon without replaying the tutorial battle."""
+    if "void ChooseSecondStarter(void)" in source:
+        raise ValueError("Second-starter callback is already present")
+    prototype = "static void CB2_GiveStarter(void);"
+    if source.count(prototype) != 1:
+        raise ValueError("Could not uniquely locate starter callback declarations")
+    source = source.replace(prototype, prototype + "\nstatic void CB2_GiveSecondStarter(void);", 1)
+
+    anchor = "static void CB2_StartFirstBattle(void)\n{"
+    if source.count(anchor) != 1:
+        raise ValueError("Could not uniquely locate first-battle callback")
+    second_callback = """void ChooseSecondStarter(void)
+{
+    SetMainCallback2(CB2_ChooseStarter);
+    gMain.savedCallback = CB2_GiveSecondStarter;
+}
+
+static void CB2_GiveSecondStarter(void)
+{
+    u16 starterMon = GetStarterPokemon(gSpecialVar_Result);
+
+    // ScriptGiveMon uses the engine's party-or-PC storage path and updates the Pokédex.
+    ScriptGiveMon(starterMon, 5, ITEM_NONE);
+    ResetTasks();
+    SetMainCallback2(CB2_ReturnToFieldContinueScriptPlayMapMusic);
+}
+
+"""
+    return source.replace(anchor, second_callback + anchor, 1)
+
+
+def patch_specials_source(source: str) -> str:
+    anchor = "def_special ChooseStarter, waitstate=1"
+    if source.count(anchor) != 1:
+        raise ValueError("Could not uniquely locate ChooseStarter special registration")
+    if "def_special ChooseSecondStarter" in source:
+        raise ValueError("ChooseSecondStarter special is already registered")
+    return source.replace(anchor, anchor + "\ndef_special ChooseSecondStarter, waitstate=1", 1)
 
 def integrate(engine_dir: Path) -> None:
     vars_path = engine_dir / "include" / "constants" / "vars.h"
     starter_path = engine_dir / "src" / "starter_choose.c"
     lab_path = engine_dir / "data" / "maps" / "LittlerootTown_ProfessorBirchsLab" / "scripts.inc"
+    battle_setup_path = engine_dir / "src" / "battle_setup.c"
+    specials_path = engine_dir / "data" / "specials.inc"
     vars_path.write_text(patch_vars_header(vars_path.read_text(encoding="utf-8")), encoding="utf-8")
     starter_path.write_text(patch_starter_source(starter_path.read_text(encoding="utf-8")), encoding="utf-8")
     lab_path.write_text(patch_lab_script(lab_path.read_text(encoding="utf-8")), encoding="utf-8")
+    battle_setup_path.write_text(patch_battle_setup_source(battle_setup_path.read_text(encoding="utf-8")), encoding="utf-8")
+    specials_path.write_text(patch_specials_source(specials_path.read_text(encoding="utf-8")), encoding="utf-8")
 
 
 def main() -> None:
