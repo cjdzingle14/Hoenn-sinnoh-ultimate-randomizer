@@ -55,6 +55,8 @@ jobs:
         run: python -m tools.integrate_starters --engine-dir vendor/pokeemerald-expansion
       - name: Enable the National Pokédex from the start
         run: python -m tools.integrate_national_dex --engine-dir vendor/pokeemerald-expansion
+      - name: Enable auto-run from the start and skip Mom's Running Shoes scene
+        run: python -m tools.integrate_autorun --engine-dir vendor/pokeemerald-expansion
       - name: Integrate runtime wild and trainer randomization
         run: python -m tools.integrate_runtime_randomizers --engine-dir vendor/pokeemerald-expansion
       - name: Configure rival 10 Poké Ball gift

@@ -14,7 +14,7 @@ A custom Pokémon GBA ROM-hack project targeting one adventure with both Hoenn a
 
 ## Current implementation
 
-The project applies engine source overlays during CI before compiling the ROM. The starter overlay selects three distinct eligible species at runtime for each new game. The build also integrates runtime wild/trainer randomization, reusable TMs, HM item-based field move access, a rival Poké Ball gift, and streamlined Nurse Joy healing.
+The project applies engine source overlays during CI before compiling the ROM. The starter overlay selects three distinct eligible species at runtime for each new game. Auto-run is enabled from the beginning, replacing the post-Pokédex Mom/Running Shoes scene. The build also integrates runtime wild/trainer randomization, reusable TMs, HM item-based field move access, a rival Poké Ball gift, and streamlined Nurse Joy healing.
 
 The graphics pipeline downloads pinned Gen V-style battle sprites at build time, converts them to the engine's existing GBA dimensions and 4bpp palette limits, and applies a restrained overworld tileset palette grade. It preserves the pinned engine submodule and does not commit downloaded sprite artwork.
 
@@ -24,12 +24,12 @@ This is **not yet the completed two-region game**. Sinnoh maps and travel, live 
 
 Requires Python 3.10 or newer.
 
-\`\`\`bash
+```bash
 python -m pip install pytest Pillow
 python -m pytest -q
 python -m tools.integrate_starters --engine-dir vendor/pokeemerald-expansion
 make -C vendor/pokeemerald-expansion -j2
-\`\`\`
+```
 
 GitHub Actions applies the graphics and gameplay overlays, builds the custom ROM, validates its GBA header, and uploads a test artifact.
 
