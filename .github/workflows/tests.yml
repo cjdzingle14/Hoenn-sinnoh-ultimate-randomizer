@@ -17,6 +17,8 @@ jobs:
           python-version: "3.11"
       - run: python -m pip install --upgrade pip pytest
       - run: python -m pytest -q
+      - name: Validate planned Sinnoh world graph
+        run: python -m tools.validate_sinnoh_world
 
   engine-custom:
     runs-on: ubuntu-24.04
