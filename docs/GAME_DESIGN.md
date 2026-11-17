@@ -16,7 +16,11 @@ Scaling should preserve each Gym's identity while changing team size, levels, mo
 
 ## Starter randomization
 
-Each region presents its own set of three randomized starter choices. The player chooses one Pokémon in Hoenn and one Pokémon in Sinnoh, for two starter selections total across the adventure. All six offered Pokémon are distinct across both regions, excluding unsupported and banned species. The long-term design uses a run seed and separate starter streams for Hoenn and Sinnoh. The current engine integration now generates a fresh trio of distinct non-Legendary base species at runtime whenever a new game enters the starter-selection screen. The chosen Pokémon is then saved as part of that playthrough. The second regional starter screen and persistent two-region starter grants remain future engine work; the Python rules prototype defines and tests the six-choice result.
+The Hoenn adventure has two starter selections. At the beginning, the player chooses one Pokémon from a randomized trio in Professor Birch's normal starter sequence. After defeating the Route 103 rival and returning to Birch's lab, Birch offers a second randomized trio. The second trio must exclude all three species offered in the first trio, so all six offered choices are unique. The first selection and its Pokémon must remain saved; the second selection is a separate, one-time grant and must never overwrite the first. Both Pokémon are added to the player's collection, using the party when space is available and the PC otherwise. The second offer must be triggered by the actual rival-defeat/lab-return progression, not merely by reopening the starter screen.
+
+## Pokédex
+
+Use the National Pokédex from the start of a new game. It must cover every species supported by the pinned engine revision, not only the Hoenn regional dex or a Sinnoh regional list. Seen/caught registration must remain shared and correct across both regions, and newly selected starters must register through the normal engine Pokédex flow. The player should not need to complete a regional Pokédex or wait for a late-game upgrade to access National mode.
 
 ## Legendary distribution
 

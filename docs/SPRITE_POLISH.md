@@ -12,8 +12,8 @@ complete normal-front, normal-back, and shiny-front sources.
   sprites are repeated into both frames.
 - Back sprites keep the engine's existing dimensions.
 - Shiny palettes are generated from the matching shiny front source.
-- Party icons are updated when the PokeAPI icon source exists; otherwise the
-  engine's current icon remains.
+- Original engine party/menu icons (`icon.png` and `icon_gba.png`) are preserved;
+  the HD battle-sprite pass never replaces or resizes them.
 - Existing image dimensions are retained. GBA variants are indexed with at most
   15 visible colors plus transparent palette index zero.
 - Species with missing source files or unsupported engine layouts are skipped

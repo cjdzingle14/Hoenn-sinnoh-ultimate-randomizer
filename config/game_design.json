@@ -50,6 +50,12 @@
     "mega_evolution": {
       "enabled": true,
       "reuse_engine_support_when_available": true
+    },
+    "pokedex": {
+      "mode": "national",
+      "enabled_from_new_game": true,
+      "coverage": "all_species_supported_by_pinned_engine_revision",
+      "regional_filter_default": false
     }
   },
   "validation": {

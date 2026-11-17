@@ -71,6 +71,8 @@ def test_integrate_species_preserves_engine_dimensions_and_animation(tmp_path: P
     Image.new("RGBA", (64, 64), (10, 20, 30, 255)).save(species / "back.png")
     Image.new("RGBA", (32, 64), (10, 20, 30, 255)).save(species / "icon.png")
     Image.new("P", (32, 64)).save(species / "icon_gba.png")
+    original_icon = (species / "icon.png").read_bytes()
+    original_icon_gba = (species / "icon_gba.png").read_bytes()
 
     def fake_download(url, destination, attempts=3):
         destination.parent.mkdir(parents=True, exist_ok=True)
@@ -92,8 +94,6 @@ def test_integrate_species_preserves_engine_dimensions_and_animation(tmp_path: P
         ("back.png", (64, 64)),
         ("anim_front_gba.png", (64, 128)),
         ("back_gba.png", (64, 64)),
-        ("icon.png", (32, 64)),
-        ("icon_gba.png", (32, 64)),
     ):
         with Image.open(species / name) as image:
             assert image.size == size
@@ -101,5 +101,7 @@ def test_integrate_species_preserves_engine_dimensions_and_animation(tmp_path: P
         png = (species / name).read_bytes()
         assert png[24] == 4  # 4-bit indexed color depth
         assert png[25] == 3  # indexed PNG color type required by gbagfx
+    assert (species / "icon.png").read_bytes() == original_icon
+    assert (species / "icon_gba.png").read_bytes() == original_icon_gba
     for name in ("normal.pal", "normal_gba.pal", "shiny.pal", "shiny_gba.pal"):
         assert (species / name).read_text().splitlines()[2] == "16"
