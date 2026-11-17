@@ -11,10 +11,9 @@ def patch_auto_run_source(source: str) -> str:
     pattern = re.compile(
         r"(?m)^([ \t]*)&& \(heldKeys & B_BUTTON\)\r?\n\1&& FlagGet\(FLAG_SYS_B_DASH\)\r?\n"
     )
-    patched, count = pattern.subn("", source, count=1)
-    if count != 1:
+    if len(list(pattern.finditer(source))) != 1:
         raise ValueError("Could not uniquely locate the standard B-button running gate")
-    return patched
+    return pattern.sub("", source, count=1)
 
 
 def patch_littleroot_script(source: str) -> str:
