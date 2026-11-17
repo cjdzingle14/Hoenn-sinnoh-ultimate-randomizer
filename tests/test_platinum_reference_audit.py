@@ -9,10 +9,14 @@ from tools.audit_platinum_reference import audit_rom, read_nitrofs
 
 def minimal_nds_rom() -> bytes:
     data = bytearray(0x204)
-    data[:12] = b"TEST GAME\0\0\0"
+    data[:12] = b"TEST GAME\\0\\0\\0"
     data[0x0C:0x10] = b"TEST"
     data[0x1E] = 2
-    fnt = struct.pack("<IHH", 8, 0, 0xF000) + bytes([1]) + b"x" + bytes([0])
+    # FNT header, one directory-table entry, then its filename subtable.
+    subtable = bytes([1]) + b"x" + bytes([0])
+    fnt = (struct.pack("<IHH", 16, 0, 1)
+           + struct.pack("<IHH", 16, 0, 0xF000)
+           + subtable)
     data[0x40:0x48] = struct.pack("<II", 0x180, len(fnt))
     data[0x48:0x50] = struct.pack("<II", 0x190, 8)
     data[0x180:0x180 + len(fnt)] = fnt
