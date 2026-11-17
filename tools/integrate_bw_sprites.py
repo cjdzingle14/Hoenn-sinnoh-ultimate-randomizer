@@ -77,10 +77,6 @@ def _source_paths(dex: int) -> dict[str, str]:
         "front": f"{SOURCE_ROOT}/{dex}.png",
         "back": f"{SOURCE_ROOT}/back/{dex}.png",
         "shiny_front": f"{SOURCE_ROOT}/shiny/{dex}.png",
-        "icon": (
-            "https://raw.githubusercontent.com/PokeAPI/sprites/"
-            f"{SOURCE_REVISION}/sprites/pokemon/versions/generation-v/icons/{dex}.png"
-        ),
     }
 
 
@@ -187,7 +183,7 @@ def _open_fit(path: Path, size: tuple[int, int]) -> Image.Image:
 
 
 def integrate_species(directory: Path, dex: int, cache: Path) -> bool:
-    """Replace front/back normal and shiny palette art for one species."""
+    """Replace battle art while preserving the engine original menu icons."""
     front_target, back_target = directory / "anim_front.png", directory / "back.png"
     if not front_target.exists() or not back_target.exists():
         return False
@@ -207,7 +203,7 @@ def integrate_species(directory: Path, dex: int, cache: Path) -> bool:
             return False
         source_files["front"] = static_path
 
-    for key in ("back", "shiny_front", "icon"):
+    for key in ("back", "shiny_front"):
         target = cache / key / f"{dex}.png"
         if not _download(paths[key], target):
             if key == "icon":
@@ -233,14 +229,6 @@ def integrate_species(directory: Path, dex: int, cache: Path) -> bool:
         "anim_front_gba.png": front_indexed,
         "back_gba.png": back_indexed,
     }
-    if "icon" in source_files and (directory / "icon.png").exists():
-        with Image.open(directory / "icon.png") as current_icon:
-            icon_size = current_icon.size
-        icon = fit_front_sheet(source_files["icon"], icon_size)
-        icon_indexed = indexed_gba(icon, make_palette(icon))
-        replacements["icon.png"] = icon_indexed
-        replacements["icon_gba.png"] = icon_indexed
-
     for name, image in replacements.items():
         # The engine's gbagfx requires 4-bit indexed PNGs (PNG color type 3).
         image.save(directory / name, format="PNG", bits=4, transparency=0)
