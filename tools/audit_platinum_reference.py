@@ -12,7 +12,6 @@ import json
 import struct
 from pathlib import Path
 
-MAP_RELATED_PREFIXES = ("fielddata/",)
 MAP_RELATED_NAMES = {
     "fielddata/areadata/area_data.narc",
     "fielddata/areadata/area_build_model/area_build.narc",
@@ -41,10 +40,13 @@ def read_nitrofs(data: bytes) -> list[dict]:
         raise ValueError("ROM has an invalid FAT")
 
     fnt = data[fnt_offset:fnt_offset + fnt_size]
+    if len(fnt) < 8:
+        raise ValueError("ROM has a truncated FNT header")
     directory_count = struct.unpack_from("<H", fnt, 6)[0]
-    if not directory_count or directory_count * 8 > len(fnt):
+    directory_table_end = 8 + directory_count * 8
+    if not directory_count or directory_table_end > len(fnt):
         raise ValueError("ROM has an invalid FNT directory table")
-    directories = [struct.unpack_from("<IHH", fnt, i * 8)
+    directories = [struct.unpack_from("<IHH", fnt, 8 + i * 8)
                    for i in range(directory_count)]
     fat = [struct.unpack_from("<II", data, fat_offset + i * 8)
            for i in range(fat_size // 8)]
@@ -57,7 +59,7 @@ def read_nitrofs(data: bytes) -> list[dict]:
             raise ValueError("ROM has an invalid or cyclic FNT directory")
         visited.add(index)
         subtable_offset, first_file_id, _ = directories[index]
-        if subtable_offset >= len(fnt):
+        if subtable_offset < directory_table_end or subtable_offset >= len(fnt):
             raise ValueError("ROM has an out-of-range FNT subtable")
         pos = subtable_offset
         file_id = first_file_id
