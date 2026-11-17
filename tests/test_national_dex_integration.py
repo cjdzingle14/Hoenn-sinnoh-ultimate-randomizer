@@ -1,26 +1,29 @@
 import unittest
 
-from tools.integrate_national_dex import patch_pokedex_source
+from tools.integrate_national_dex import patch_new_game_source
 
 
 class NationalDexIntegrationTests(unittest.TestCase):
-    def test_enables_national_dex_after_new_game_reset(self):
-        source = """void ResetPokedex(void)
+    def test_enables_national_dex_after_event_data_initialization(self):
+        source = """void NewGameInitData(void)
 {
-    DisableNationalPokedex();
-    ClearDexFlags();
+    ResetPokedex();
+    InitEventData();
+    ClearTVShowData();
 }
 """
-        patched = patch_pokedex_source(source)
-        self.assertIn("DisableNationalPokedex();", patched)
-        self.assertIn("EnableNationalPokedex();", patched)
-        self.assertLess(patched.index("DisableNationalPokedex();"), patched.index("EnableNationalPokedex();"))
+        patched = patch_new_game_source(source)
+        init_pos = patched.index("InitEventData();")
+        enable_pos = patched.index("EnableNationalPokedex();")
+        next_init = patched.index("ClearTVShowData();")
+        self.assertLess(init_pos, enable_pos)
+        self.assertLess(enable_pos, next_init)
 
     def test_rejects_unexpected_or_ambiguous_engine_source(self):
         with self.assertRaises(ValueError):
-            patch_pokedex_source("void ResetPokedex(void) {}")
+            patch_new_game_source("void NewGameInitData(void) {}")
         with self.assertRaises(ValueError):
-            patch_pokedex_source("DisableNationalPokedex();\nDisableNationalPokedex();")
+            patch_new_game_source("InitEventData();\\nInitEventData();")
 
 
 if __name__ == "__main__":
