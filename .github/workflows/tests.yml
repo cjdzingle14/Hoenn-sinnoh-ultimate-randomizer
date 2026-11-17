@@ -53,8 +53,6 @@ jobs:
           arm-none-eabi-gcc --version
       - name: Apply per-new-game randomized starter choices
         run: python -m tools.integrate_starters --engine-dir vendor/pokeemerald-expansion
-      - name: Integrate the one-time second Birch starter offer
-        run: python -m tools.integrate_two_stage_starters --engine-dir vendor/pokeemerald-expansion
       - name: Enable the National Pokédex from the start
         run: python -m tools.integrate_national_dex --engine-dir vendor/pokeemerald-expansion
       - name: Integrate runtime wild and trainer randomization
