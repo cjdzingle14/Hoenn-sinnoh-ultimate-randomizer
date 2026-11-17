@@ -23,7 +23,7 @@ class NationalDexIntegrationTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             patch_new_game_source("void NewGameInitData(void) {}")
         with self.assertRaises(ValueError):
-            patch_new_game_source("InitEventData();\\nInitEventData();")
+            patch_new_game_source("InitEventData();\nInitEventData();")
 
 
 if __name__ == "__main__":
