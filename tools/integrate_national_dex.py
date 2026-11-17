@@ -13,7 +13,7 @@ def patch_new_game_source(source: str) -> str:
     return source.replace(
         anchor,
         anchor
-        + "\\n    // Enable after InitEventData: it resets the National Dex flag and variable.\\n"
+        + "\n    // Enable after InitEventData: it resets the National Dex flag and variable.\n"
         + "    EnableNationalPokedex();",
         1,
     )
