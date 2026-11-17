@@ -1,27 +1,28 @@
-"""Build-time overlay that unlocks the engine's National Pokédex from a new game."""
+"""Build-time overlay that enables National mode after new-game event data initialization."""
 from __future__ import annotations
 
 import argparse
 from pathlib import Path
 
 
-def patch_pokedex_source(source: str) -> str:
-    """Keep the National Dex enabled after the new-game Pokédex reset."""
-    anchor = "    DisableNationalPokedex();"
+def patch_new_game_source(source: str) -> str:
+    """Enable National Dex only after InitEventData has cleared old flags and vars."""
+    anchor = "    InitEventData();"
     if source.count(anchor) != 1:
-        raise ValueError("Could not uniquely locate ResetPokedex National Dex reset")
+        raise ValueError("Could not uniquely locate new-game InitEventData call")
     return source.replace(
         anchor,
-        anchor + "\n    // This adventure spans multiple regions: use the full National Dex from the start.\n"
-        "    EnableNationalPokedex();",
+        anchor
+        + "\\n    // Enable after InitEventData: it resets the National Dex flag and variable.\\n"
+        + "    EnableNationalPokedex();",
         1,
     )
 
 
 def integrate(engine_dir: Path) -> None:
-    source_path = engine_dir / "src" / "pokedex.c"
+    source_path = engine_dir / "src" / "new_game.c"
     source_path.write_text(
-        patch_pokedex_source(source_path.read_text(encoding="utf-8")),
+        patch_new_game_source(source_path.read_text(encoding="utf-8")),
         encoding="utf-8",
     )
 
@@ -31,7 +32,7 @@ def main() -> None:
     parser.add_argument("--engine-dir", type=Path, required=True)
     args = parser.parse_args()
     integrate(args.engine_dir)
-    print("Enabled National Pokédex from the start of a new game")
+    print("Enabled National Pokédex after new-game event data initialization")
 
 
 if __name__ == "__main__":
