@@ -20,13 +20,23 @@ def _pool_source(pool: list[str], name: str) -> str:
     entries = ",\n".join(f"    {species}" for species in pool)
     return f"static const u16 {name}[] = {{\n{entries}\n}};\n"
 
-def _insert_after_global(source: str, addition: str) -> str:
-    if addition.strip() in source:
+def _ensure_include(source: str, header: str) -> str:
+    include = f'#include "{header}"'
+    if include in source:
         return source
     anchor = '#include "global.h"'
     if source.count(anchor) != 1:
         raise ValueError("Expected exactly one global.h include")
-    return source.replace(anchor, anchor + "\n#include \"event_data.h\"\n" + addition, 1)
+    return source.replace(anchor, anchor + "\\n" + include, 1)
+
+
+def _insert_after_global(source: str, addition: str) -> str:
+    if addition.strip() not in source:
+        anchor = '#include "global.h"'
+        if source.count(anchor) != 1:
+            raise ValueError("Expected exactly one global.h include")
+        source = source.replace(anchor, anchor + "\\n" + addition, 1)
+    return source
 
 def patch_wild_encounter(source: str, pool: list[str]) -> str:
     array = _pool_source(pool, "sRandomizerWildSpecies")
@@ -46,8 +56,7 @@ def patch_wild_encounter(source: str, pool: list[str]) -> str:
         return source
     if source.count(anchor) != 1:
         raise ValueError("Could not find the expected CreateWildMon implementation")
-    if '#include "random.h"' not in source:
-        source = source.replace('#include "global.h"', '#include "global.h"\n#include "random.h"', 1)
+    source = _ensure_include(source, "random.h")
     return source.replace(anchor, replacement, 1)
 
 def patch_trainer_util(source: str, pool: list[str]) -> str:
@@ -76,9 +85,10 @@ def patch_trainer_util(source: str, pool: list[str]) -> str:
         trainerMon = &randomizedTrainerMon;
     }"""
     if replacement in source:
-        return source
+        return _ensure_include(source, "random.h")
     if source.count(anchor) != 1:
         raise ValueError("Could not find the expected GenerateMonFromTrainerMon implementation")
+    source = _ensure_include(source, "random.h")
     return source.replace(anchor, replacement, 1)
 
 def patch_flags(source: str) -> str:
