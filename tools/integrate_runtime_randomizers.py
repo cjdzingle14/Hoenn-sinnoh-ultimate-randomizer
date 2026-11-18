@@ -27,7 +27,7 @@ def _ensure_include(source: str, header: str) -> str:
     anchor = '#include "global.h"'
     if source.count(anchor) != 1:
         raise ValueError("Expected exactly one global.h include")
-    return source.replace(anchor, anchor + "\\n" + include, 1)
+    return source.replace(anchor, anchor + "\n" + include, 1)
 
 
 def _insert_after_global(source: str, addition: str) -> str:
@@ -35,7 +35,7 @@ def _insert_after_global(source: str, addition: str) -> str:
         anchor = '#include "global.h"'
         if source.count(anchor) != 1:
             raise ValueError("Expected exactly one global.h include")
-        source = source.replace(anchor, anchor + "\\n" + addition, 1)
+        source = source.replace(anchor, anchor + "\n" + addition, 1)
     return source
 
 def patch_wild_encounter(source: str, pool: list[str]) -> str:
