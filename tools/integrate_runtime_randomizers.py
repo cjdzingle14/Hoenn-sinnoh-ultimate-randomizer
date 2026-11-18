@@ -31,6 +31,7 @@ def _ensure_include(source: str, header: str) -> str:
 
 
 def _insert_after_global(source: str, addition: str) -> str:
+    source = _ensure_include(source, "event_data.h")
     if addition.strip() not in source:
         anchor = '#include "global.h"'
         if source.count(anchor) != 1:
