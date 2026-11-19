@@ -1,5 +1,9 @@
 name: Project tests and custom engine build
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 on:
   push:
     branches: [main]
@@ -15,12 +19,12 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - run: python -m pip install --upgrade pip pytest
+      - run: python -m pip install --upgrade pip pytest Pillow
       - run: python -m pytest -q
 
   engine-custom:
     runs-on: ubuntu-24.04
-    timeout-minutes: 30
+    timeout-minutes: 45
     steps:
       - name: Check out repository and pinned engine submodule
         uses: actions/checkout@v4
@@ -30,6 +34,19 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y build-essential binutils-arm-none-eabi gcc-arm-none-eabi libnewlib-arm-none-eabi git libpng-dev python3
+      - name: Install sprite audit dependency
+        run: python -m pip install Pillow
+      - name: Cache pinned PokeAPI sprite sources
+        uses: actions/cache@v4
+        with:
+          path: /tmp/pokeapi-bw-cache
+          key: pokeapi-bw-c0542f7c51215d9672439012838c99f520596cbd
+      - name: Integrate Gen V-style Pokémon battle sprites
+        run: python -m tools.integrate_bw_sprites --engine-dir vendor/pokeemerald-expansion --cache-dir /tmp/pokeapi-bw-cache
+      - name: Apply HD-inspired overworld palette polish
+        run: python -m tools.integrate_overworld_polish --engine-dir vendor/pokeemerald-expansion
+      - name: Audit converted GBA sprite palettes and transparency
+        run: python -m tools.sprite_polish --engine-dir vendor/pokeemerald-expansion
       - name: Record pinned engine revision
         run: |
           git -C vendor/pokeemerald-expansion rev-parse HEAD
@@ -51,10 +68,10 @@ jobs:
         run: make -j2
       - name: Validate standard GBA header for emulator compatibility
         run: python -m tools.validate_gba_rom vendor/pokeemerald-expansion/pokeemerald.gba
-      - name: Upload custom per-playthrough starter ROM
+      - name: Upload custom sprite-polish test ROM
         uses: actions/upload-artifact@v4
         with:
-          name: hoenn-sinnoh-test-build
+          name: hoenn-sinnoh-sprite-polish-test-build
           path: vendor/pokeemerald-expansion/pokeemerald.gba
           if-no-files-found: error
           retention-days: 14
