@@ -38,6 +38,12 @@ jobs:
         run: python -m tools.integrate_starters --engine-dir vendor/pokeemerald-expansion
       - name: Integrate runtime wild and trainer randomization
         run: python -m tools.integrate_runtime_randomizers --engine-dir vendor/pokeemerald-expansion
+      - name: Enable trade-free level-up evolutions
+        run: python -m tools.integrate_trade_evolutions --engine-dir vendor/pokeemerald-expansion
+      - name: Set legendary catch rate to 30 percent baseline
+        run: python -m tools.integrate_legendary_catch_rate --engine-dir vendor/pokeemerald-expansion
+      - name: Add in-game randomizer options menu
+        run: python -m tools.integrate_randomizer_menu --engine-dir vendor/pokeemerald-expansion
       - name: Configure rival 10 Poké Ball gift
         run: python -m tools.integrate_encounters --engine-dir vendor/pokeemerald-expansion
       - name: Apply streamlined Nurse Joy healing flow
