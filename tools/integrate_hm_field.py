@@ -16,7 +16,7 @@ FIELD_NEW = """static enum Item GetHMItemForFieldMove(enum FieldMove fieldMove)
     case FIELD_MOVE_FLY: return ITEM_HM_FLY;
     case FIELD_MOVE_SURF: return ITEM_HM_SURF;
     case FIELD_MOVE_STRENGTH: return ITEM_HM_STRENGTH;
-    case FIELD_MOVE_FLASH: return ITEM_HM_FLASH;
+    case FIELD_MOVE_FLASH: return ITEM_TM_FLASH;
     case FIELD_MOVE_ROCK_SMASH: return ITEM_HM_ROCK_SMASH;
     case FIELD_MOVE_WATERFALL: return ITEM_HM_WATERFALL;
     case FIELD_MOVE_DIVE: return ITEM_HM_DIVE;
@@ -63,7 +63,7 @@ PARTY_NEW = """static enum Item GetHMItemForFieldMove(enum FieldMove fieldMove)
     case FIELD_MOVE_FLY: return ITEM_HM_FLY;
     case FIELD_MOVE_SURF: return ITEM_HM_SURF;
     case FIELD_MOVE_STRENGTH: return ITEM_HM_STRENGTH;
-    case FIELD_MOVE_FLASH: return ITEM_HM_FLASH;
+    case FIELD_MOVE_FLASH: return ITEM_TM_FLASH;
     case FIELD_MOVE_ROCK_SMASH: return ITEM_HM_ROCK_SMASH;
     case FIELD_MOVE_WATERFALL: return ITEM_HM_WATERFALL;
     case FIELD_MOVE_DIVE: return ITEM_HM_DIVE;

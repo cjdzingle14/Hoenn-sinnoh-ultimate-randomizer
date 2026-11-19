@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "status": "design_manifest_only_not_engine_maps",
+  "region": "sinnoh",
+  "start_map": "MAP_TWINLEAF_TOWN_PLAYERS_HOUSE_2F",
+  "description": "First playable Sinnoh slice, to be authored with original GBA tilemaps, events and scripts.",
+  "maps": [
+    {"id": "MAP_TWINLEAF_TOWN_PLAYERS_HOUSE_2F", "role": "new_game_start_interior", "connections": [], "warps": ["MAP_TWINLEAF_TOWN_PLAYERS_HOUSE_1F"]},
+    {"id": "MAP_TWINLEAF_TOWN_PLAYERS_HOUSE_1F", "role": "player_home", "connections": [], "warps": ["MAP_TWINLEAF_TOWN"]},
+    {"id": "MAP_TWINLEAF_TOWN_RIVAL_HOME_1F", "role": "rival_home", "connections": [], "warps": ["MAP_TWINLEAF_TOWN"]},
+    {"id": "MAP_TWINLEAF_TOWN", "role": "starting_village", "connections": ["MAP_ROUTE_201_WEST", "MAP_LAKE_VERITY_SHORE"], "warps": ["MAP_TWINLEAF_TOWN_PLAYERS_HOUSE_1F", "MAP_TWINLEAF_TOWN_RIVAL_HOME_1F"]},
+    {"id": "MAP_LAKE_VERITY_SHORE", "role": "early_story_location", "connections": ["MAP_TWINLEAF_TOWN"], "warps": []},
+    {"id": "MAP_ROUTE_201_WEST", "role": "route_segment", "connections": ["MAP_TWINLEAF_TOWN", "MAP_ROUTE_201_EAST"], "warps": []},
+    {"id": "MAP_ROUTE_201_EAST", "role": "route_segment", "connections": ["MAP_ROUTE_201_WEST", "MAP_SANDGEM_TOWN"], "warps": []},
+    {"id": "MAP_SANDGEM_TOWN", "role": "first_research_town", "connections": ["MAP_ROUTE_201_EAST"], "warps": ["MAP_SANDGEM_TOWN_RESEARCH_LAB"]},
+    {"id": "MAP_SANDGEM_TOWN_RESEARCH_LAB", "role": "starter_research_lab", "connections": [], "warps": ["MAP_SANDGEM_TOWN"]}
+  ]
+}

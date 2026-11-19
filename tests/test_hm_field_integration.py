@@ -36,7 +36,7 @@ def test_all_eight_hms_map_to_their_matching_items():
         "FIELD_MOVE_FLY: return ITEM_HM_FLY",
         "FIELD_MOVE_SURF: return ITEM_HM_SURF",
         "FIELD_MOVE_STRENGTH: return ITEM_HM_STRENGTH",
-        "FIELD_MOVE_FLASH: return ITEM_HM_FLASH",
+        "FIELD_MOVE_FLASH: return ITEM_TM_FLASH",
         "FIELD_MOVE_ROCK_SMASH: return ITEM_HM_ROCK_SMASH",
         "FIELD_MOVE_WATERFALL: return ITEM_HM_WATERFALL",
         "FIELD_MOVE_DIVE: return ITEM_HM_DIVE",
