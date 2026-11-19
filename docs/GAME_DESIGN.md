@@ -1,5 +1,13 @@
 # Game Design
 
+## New-game starting region
+
+At the start of a new game, offer **Hoenn** or **Sinnoh** as the player's opening region. Hoenn remains the default for existing behavior and backward compatibility. This choice selects the opening location and introductory sequence only; it does not lock the player out of the other region. Both regions remain part of the same adventure and are intended to be reachable from the beginning through the shared travel system.
+
+The choice must be stored in the save so the correct opening flow is retained across save/load. The selection screen must appear only for a genuinely new game, not Continue or returning from another menu. Each option must resolve through verified engine map/script identifiers; do not use placeholder map IDs in production code.
+
+The initial rules layer lives in `tools/region_selection.py`. It validates the configured choices and resolves stable logical start keys (`hoenn_new_game_start` / `sinnoh_new_game_start`). The engine-facing menu, save field, opening scripts, and actual Sinnoh start map are still pending map import and engine integration.
+
 ## World structure: both-open
 
 Hoenn and Sinnoh are available from the beginning through an in-game travel mechanism, such as a port or airport hub. The player chooses the order of regional exploration. Access to either region must not depend on completing the other region's League.

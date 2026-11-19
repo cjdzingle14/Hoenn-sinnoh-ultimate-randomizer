@@ -6,6 +6,13 @@
     "regions": ["hoenn", "sinnoh"],
     "travel_unlocked_at_start": true
   },
+  "new_game_region_selection": {
+    "enabled": true,
+    "default": "hoenn",
+    "choices": ["hoenn", "sinnoh"],
+    "selection_scope": "opening_region_only",
+    "keep_both_regions_in_adventure": true
+  },
   "gym_progression": {
     "mode": "scaled",
     "progression_inputs": ["total_badges", "major_story_milestones"],
