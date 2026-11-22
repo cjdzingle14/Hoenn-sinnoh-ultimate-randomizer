@@ -6,9 +6,9 @@ concurrency:
 
 on:
   push:
-    branches: [main]
+    branches: [main, sinnoh/twinleaf-town-first-pass]
   pull_request:
-    branches: [main]
+    branches: [main, sinnoh/twinleaf-town-first-pass]
   workflow_dispatch:
 
 jobs:
@@ -21,6 +21,8 @@ jobs:
           python-version: "3.11"
       - run: python -m pip install --upgrade pip pytest Pillow
       - run: python -m pytest -q
+      - name: Validate Sinnoh map blueprint and reachability
+        run: python -m tools.sinnoh_maps
 
   engine-custom:
     runs-on: ubuntu-24.04
