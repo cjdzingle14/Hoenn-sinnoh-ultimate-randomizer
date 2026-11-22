@@ -11,8 +11,8 @@
         { "direction": "north", "destination": "SINNOH_ROUTE_201", "landing": [10, 1] }
       ],
       "interiors": [
-        { "id": "TWINLEAF_PLAYER_HOUSE", " warp_count": 2 },
-        { "id": "TWINLEAF_RIVAL_HOUSE", " warp_count": 2 }
+        { "id": "TWINLEAF_PLAYER_HOUSE", "warp_count": 2 },
+        { "id": "TWINLEAF_RIVAL_HOUSE", "warp_count": 2 }
       ],
       "npc_placeholders": [
         { "id": "TWINLEAF_NEIGHBOR", " role": "town_npc" },
