@@ -11,12 +11,12 @@
         { "direction": "north", "destination": "SINNOH_ROUTE_201", "landing": [10, 1] }
       ],
       "interiors": [
-        { "id": "TWINLEAF_PLAYER_HOUSE", "warp_count": 2 },
-        { "id": "TWINLEAF_RIVAL_HOUSE", "warp_count": 2 }
+        { "id": "TWINLEAF_PLAYER_HOUSE", " warp_count": 2 },
+        { "id": "TWINLEAF_RIVAL_HOUSE", " warp_count": 2 }
       ],
       "npc_placeholders": [
-        { "id": "TWINLEAF_NEIGHBOR", "role": "town_npc" },
-        { "id": "TWINLEAF_GUIDE", "role": "route_hint" }
+        { "id": "TWINLEAF_NEIGHBOR", " role": "town_npc" },
+        { "id": "TWINLEAF_GUIDE", " role": "route_hint" }
       ]
     },
     {
@@ -26,7 +26,7 @@
       "dimensions": { "width": 32, "height": 18 },
       "connections": [
         { "direction": "south", "destination": "SINNOH_TWINLEAF_TOWN", "landing": [10, 16] },
-        { "direction": "east", "destination": "SINNOH_LAKE_VERITY", "landing": [30, 9] }
+        { "direction": "west", "destination": "SINNOH_LAKE_VERITY", "landing": [1, 9] }
       ],
       "features": ["tall_grass", "route_trainer_slots", "signpost"],
       "encounter_slots": [
