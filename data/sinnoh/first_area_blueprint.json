@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "region": "sinnoh",
+  "maps": [
+    {
+      "id": "SINNOH_TWINLEAF_TOWN",
+      "name": "Twinleaf Town",
+      "role": "starting_town",
+      "dimensions": { "width": 20, "height": 18 },
+      "connections": [
+        { "direction": "north", "destination": "SINNOH_ROUTE_201", "landing": [10, 1] }
+      ],
+      "interiors": [
+        { "id": "TWINLEAF_PLAYER_HOUSE", "warp_count": 2 },
+        { "id": "TWINLEAF_RIVAL_HOUSE", "warp_count": 2 }
+      ],
+      "npc_placeholders": [
+        { "id": "TWINLEAF_NEIGHBOR", "role": "town_npc" },
+        { "id": "TWINLEAF_GUIDE", "role": "route_hint" }
+      ]
+    },
+    {
+      "id": "SINNOH_ROUTE_201",
+      "name": "Route 201",
+      "role": "early_route",
+      "dimensions": { "width": 32, "height": 18 },
+      "connections": [
+        { "direction": "south", "destination": "SINNOH_TWINLEAF_TOWN", "landing": [10, 16] },
+        { "direction": "east", "destination": "SINNOH_LAKE_VERITY", "landing": [30, 9] }
+      ],
+      "features": ["tall_grass", "route_trainer_slots", "signpost"],
+      "encounter_slots": [
+        { "method": "grass", "species_pool": "randomized_nonlegendary", "level_min": 2, "level_max": 4, "slots": 6 }
+      ],
+      "trainer_placeholders": [
+        { "id": "ROUTE_201_TRAINER_1", "team_size": 1, "level_min": 3, "level_max": 4 },
+        { "id": "ROUTE_201_TRAINER_2", "team_size": 1, "level_min": 3, "level_max": 4 }
+      ]
+    }
+  ],
+  "next_map_placeholder": {
+    "id": "SINNOH_LAKE_VERITY",
+    "name": "Lake Verity",
+    "status": "planned"
+  }
+}
