@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "map_id": "SINNOH_ROUTE_201",
+  "map_name": "Route 201",
+  "size": [32, 18],
+  "legend": {"0":"grass","1":"path","2":"tree","3":"tall_grass","4":"trainer","5":"sign","6":"town_exit","7":"lake_placeholder"},
+  "tiles": [
+    "22222222222222222222222222222222",
+    "20000000000000000000000000000002",
+    "20000000000000000000000000000002",
+    "20000000000000000000000000000002",
+    "20000000000000000000000000000002",
+    "20000000000000000000000000000002",
+    "20033330000000000000000000000002",
+    "20033330000000000000000000000002",
+    "20033330000000000000000000000002",
+    "20033330000000000000000000000002",
+    "20000000000000000000000000000002",
+    "20000000000000000000000000000002",
+    "20000000000000000000000000000002",
+    "20000000000000000000000000000002",
+    "20000000000000000000000000000002",
+    "20000000000000000000000000000002",
+    "26611111111111111111111111111162",
+    "22222222222222222222222222222222"
+  ],
+  "events": [
+    {"type":"trainer","id":"route201_trainer_1","tile":[13,8],"team_size":1,"level_range":[3,4]},
+    {"type":"trainer","id":"route201_trainer_2","tile":[22,9],"team_size":1,"level_range":[3,4]},
+    {"type":"sign","id":"route201_sign","tile":[11,15],"text":"Route 201"},
+    {"type":"encounter","id":"route201_grass","tiles_code":"3","species_pool":"randomized_nonlegendary","levels":[2,4],"slots":6}
+  ],
+  "connections": [
+    {"direction":"south","tile":[10,17],"destination":"SINNOH_TWINLEAF_TOWN","landing":[10,1]},
+    {"direction":"west","tile":[0,8],"destination":"SINNOH_LAKE_VERITY","landing":[1,9],"status":"planned"}
+  ],
+  "note":"Prototype grid only; tile codes require mapping to engine metatiles and native map data."
+}
