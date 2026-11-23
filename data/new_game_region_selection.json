@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "new_game_region_selection": {
+    "enabled": true,
+    "options": [
+      {"id":"HOENN","label":"Hoenn","start_map":"LITTLEROOT_TOWN","start_position":"existing_default"},
+      {"id":"SINNOH","label":"Sinnoh","start_map":"SINNOH_TWINLEAF_TOWN","start_position":"PLAYER_START"}
+    ],
+    "selection_scope":"new_game_only",
+    "legacy_behavior":"Hoenn default remains unchanged unless Sinnoh is explicitly selected",
+    "save_field":"chosen_start_region"
+  },
+  "integration_note":"Config contract only; native menu code, start-map routing, save-data persistence, and map IDs must be implemented against the pinned engine."
+}
