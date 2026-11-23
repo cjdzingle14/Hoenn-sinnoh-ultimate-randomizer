@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "map_id": "SINNOH_TWINLEAF_TOWN",
+  "map_name": "Twinleaf Town",
+  "size": [20, 18],
+  "legend": {"0":"grass","1":"path","2":"tree","3":"water","4":"house","5":"door","6":"sign","7":"npc","8":"route_exit"},
+  "tiles": [
+    "22222222222222222222",
+    "20000000000000000002",
+    "20000000000000000002",
+    "20004400000000000002",
+    "20004400000000000002",
+    "20004400000000000002",
+    "20000111111111111182",
+    "20000100000000000002",
+    "20000100000000000002",
+    "20000100000000000002",
+    "20000100000000000002",
+    "20000100000000000002",
+    "20000100000000000002",
+    "20000100000000000002",
+    "20000100000000000002",
+    "20000100000000000002",
+    "20000100000000000002",
+    "22222222222222222222"
+  ],
+  "events": [
+    {"type":"warp","id":"player_house","tile":[4,3],"destination":"TWINLEAF_PLAYER_HOUSE"},
+    {"type":"warp","id":"rival_house","tile":[5,3],"destination":"TWINLEAF_RIVAL_HOUSE"},
+    {"type":"npc","id":"neighbor","tile":[8,8],"script":"TWINLEAF_NEIGHBOR_DIALOG"},
+    {"type":"npc","id":"route_guide","tile":[10,6],"script":"TWINLEAF_ROUTE_HINT"},
+    {"type":"sign","id":"north_sign","tile":[10,5],"text":"North: Route 201"}
+  ],
+  "connections": [{"direction":"north","tile":[10,0],"destination":"SINNOH_ROUTE_201","landing":[10,16]}],
+  "note":"Prototype grid only; tile codes require mapping to engine metatiles and native map data."
+}
