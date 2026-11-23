@@ -32,6 +32,23 @@ def validate_grid(path: Path) -> list[str]:
         tile = event.get("tile")
         if tile and not (0 <= tile[0] < width and 0 <= tile[1] < height):
             errors.append(f"{path.name}: event {event.get('id')} outside map at {tile}")
+    for event in data.get("events", []):
+        if event.get("type") not in {"warp", "npc", "sign", "trainer", "encounter"}:
+            errors.append(f"{path.name}: event {event.get('id')} has unsupported type {event.get('type')}")
+        if event.get("type") == "encounter":
+            if not event.get("species_pool") or not event.get("levels") or event.get("slots", 0) < 1:
+                errors.append(f"{path.name}: encounter {event.get('id')} missing pool, levels, or slots")
+            if event.get("tiles_code") not in data.get("legend", {}):
+                errors.append(f"{path.name}: encounter {event.get('id')} references unknown tile code")
+    for connection in data.get("connections", []):
+        tile = connection.get("tile")
+        landing = connection.get("landing")
+        if tile and not (0 <= tile[0] < width and 0 <= tile[1] < height):
+            errors.append(f"{path.name}: connection {connection.get('direction')} outside map at {tile}")
+        if landing and (landing[0] < 0 or landing[1] < 0):
+            errors.append(f"{path.name}: connection {connection.get('direction')} has negative landing {landing}")
+        if not connection.get("destination"):
+            errors.append(f"{path.name}: connection {connection.get('direction')} missing destination")
     return errors
 
 
