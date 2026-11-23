@@ -17,7 +17,18 @@
 4. Pin the upstream commit SHA in docs/UPSTREAM.md.
 5. Keep upstream history and license notices intact; avoid copying the engine wholesale into this scaffold before the baseline build is verified.
 
-## Phase 2 — world integration
+## Phase 2 — new-game starting-region choice
+
+- [x] Add validated Hoenn/Sinnoh region-choice rules and logical start keys.
+- [x] Add configuration for the opening-region choice; default to Hoenn for compatibility.
+- [x] Test both choices, invalid choices, duplicate regions, and both-region availability.
+- [ ] Import and verify the Sinnoh starting map, map connections, required assets, and opening event scripts.
+- [ ] Add the region-selection screen to the New Game flow only; Continue must bypass it.
+- [ ] Persist the selected starting region in save data and restore it on load.
+- [ ] Route each selection to the correct verified map and opening script.
+- [ ] Playtest both openings, both-region travel, save/load, and starting-starter flow.
+
+## Phase 3 — world integration
 
 - Audit Hoenn map groups, map connections, warps, flags, and event scripts.
 - Define the Sinnoh map import strategy and map ID allocation.
@@ -25,14 +36,14 @@
 - Namespace story flags to prevent Hoenn/Sinnoh flag collisions.
 - Ensure both regions can be entered before either League is completed.
 
-## Phase 3 — progression scaling
+## Phase 4 — progression scaling
 
 - Implement one monotonic global progression score from durable badges and story flags.
 - Define Gym tier thresholds and leader rosters in configuration.
 - Scale leader parties at battle setup; validate species, moves, items, and levels.
 - Test visiting Gyms in either regional order.
 
-## Phase 4 — randomization
+## Phase 5 — randomization
 
 - Parse a run seed and versioned settings.
 - Use independent PRNG streams per subsystem.
@@ -41,7 +52,7 @@
 - Place legendary species in eligible slots with rarity and duplicate controls.
 - Preserve required story encounters by default.
 
-## Phase 5 — Secret Hidden Grottos and Ultra Beasts
+## Phase 6 — Secret Hidden Grottos and Ultra Beasts
 
 - [ ] Audit the final Hoenn and imported Sinnoh map data and assign exact map IDs/coordinates to the 12 planned grotto landmarks.
 - [ ] Add concealed entrances and environmental clues at the locations in docs/SECRET_GROTTO_GUIDE.md.
@@ -52,13 +63,13 @@
 - [ ] Add in-game hints and keep the spoiler guide synchronized with final map coordinates.
 - [ ] Test all entrances, region order independence, save/load, seed reproducibility, and story progression.
 
-## Phase 6 — Mega Evolution
+## Phase 7 — Mega Evolution
 
 - Confirm supported upstream Mega Evolution implementation and data.
 - Integrate Mega Stones, form changes, abilities, and battle flow as needed.
 - Test player and AI use, transformation/reversion, fainting, switching, and save compatibility.
 
-## Phase 7 — quality and release
+## Phase 8 — quality and release
 
 - Run automated tests and a clean ROM build.
 - Playtest both region orders and all Gym tiers.
@@ -66,14 +77,14 @@
 - Document known issues and legal build requirements.
 - Produce a patch workflow; do not distribute a copyrighted base ROM.
 
-## Phase 8 — Pokémon Center quality-of-life
+## Phase 9 — Pokémon Center quality-of-life
 
 - [ ] Audit the pinned engine's Pokémon Center nurse scripts and shared healing flow.
 - [ ] Remove greeting, questions, and all pre-heal dialogue while preserving the normal healing sequence and required scripts.
 - [ ] Show one brief Nurse Joy confirmation only after healing has completed.
 - [ ] Apply consistently to every Pokémon Center map and test party healing, eggs, sound/animation, and repeat visits.
 
-## Phase 9 — TM/HM quality-of-life
+## Phase 10 — TM/HM quality-of-life
 
 - [x] Make every TM reusable after it is obtained; teaching a move must not consume the TM item (engine overlay + automated source-patch tests).
 - [x] Unlock each HM field ability when its HM item is obtained (engine overlay + automated source-patch tests).
