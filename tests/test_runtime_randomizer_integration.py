@@ -40,6 +40,7 @@ def test_flags_claim_only_known_unused_slots():
     source = (
         "#define FLAG_UNUSED_0x493                                           0x493 // Unused Flag\n"
         "#define FLAG_UNUSED_0x494                                           0x494 // Unused Flag\n"
+        "#define FLAG_UNUSED_0x495                                           0x495 // Unused Flag\n"
     )
     patched = patch_flags(source)
     assert "#define FLAG_RANDOMIZER_DISABLE_WILD" in patched
