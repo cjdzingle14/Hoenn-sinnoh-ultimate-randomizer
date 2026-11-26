@@ -16,6 +16,9 @@ def validate_world(config: dict) -> list[str]:
     if len(ids) != len(set(ids)):
         errors.append("map ids must be unique")
     known = set(ids)
+    external = set(config.get("external_maps", []))
+    if known & external:
+        errors.append("external_maps must not duplicate maps in the playable slice")
     start = config.get("start_map")
     if start not in known:
         errors.append(f"start_map {start!r} is not declared")
@@ -25,9 +28,9 @@ def validate_world(config: dict) -> list[str]:
     for entry in maps:
         source = entry["id"]
         for target in entry.get("connections", []) + entry.get("warps", []):
-            if target not in known:
+            if target not in known and target not in external:
                 errors.append(f"{source} references unknown map {target}")
-            else:
+            elif target in known:
                 graph[source].add(target)
                 graph[target].add(source)
 
