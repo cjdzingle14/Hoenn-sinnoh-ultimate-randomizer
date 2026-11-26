@@ -23,7 +23,7 @@ def validate(engine_root: Path, manifest_path: Path) -> list[str]:
             continue
         data = json.loads(map_path.read_text(encoding="utf-8"))
         if data.get("id") != entry["id"]:
-            errors.append(f"{source}: manifest id {entry['id']} != native id {data.get('id')}")
+            errors.append(f"{source}: manifest id does not match native id (manifest {entry['id']}, engine {data.get('id')})")
         if source not in registered:
             errors.append(f"{source}: not registered in data/maps/map_groups.json")
         map_by_id[entry["id"]] = data
