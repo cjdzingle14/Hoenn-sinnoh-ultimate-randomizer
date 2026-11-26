@@ -101,12 +101,13 @@ static void SetPartyMonFieldSelectionActions(struct Pokemon *mons, u8 slotId)
     if (!InBattlePike())
     {"""
 
-def patch_field_move(source: str) -> str:
-    if FIELD_NEW in source:
+def patch_field_move(source: str, flash_item: str = "ITEM_HM_FLASH") -> str:
+    field_new = FIELD_NEW.replace("ITEM_HM_FLASH", flash_item)
+    if field_new in source:
         return source
     if source.count(FIELD_OLD) != 1:
         raise ValueError("Expected exactly one badge-based field-move unlock function")
-    source = source.replace(FIELD_OLD, FIELD_NEW, 1)
+    source = source.replace(FIELD_OLD, field_new, 1)
     source = source.replace(".isUnlockedFunc = HasBadgeForFieldMove,", ".isUnlockedFunc = HasHMItemForFieldMove,")
     if '#include "item.h"' not in source:
         source = source.replace('#include "global.h"', '#include "global.h"\n#include "item.h"', 1)
@@ -117,22 +118,39 @@ def patch_field_move(source: str) -> str:
     return source
 
 
-def patch_party_menu(source: str) -> str:
-    if PARTY_NEW in source:
+def patch_party_menu(source: str, flash_item: str = "ITEM_HM_FLASH") -> str:
+    party_new = PARTY_NEW.replace("ITEM_HM_FLASH", flash_item)
+    if party_new in source:
         return source
     if source.count(PARTY_OLD) != 1:
         raise ValueError("Expected exactly one party field-move action builder")
-    source = source.replace(PARTY_OLD, PARTY_NEW, 1)
+    source = source.replace(PARTY_OLD, party_new, 1)
     if '#include "constants/items.h"' not in source:
         source = source.replace('#include "constants/field_move.h"', '#include "constants/field_move.h"\n#include "constants/items.h"', 1)
     return source
 
 
+def resolve_flash_item(engine_dir: Path) -> str:
+    """Resolve Flash as an HM in Emerald or a TM in the Sinnoh/Platinum data set."""
+    tms_hms = engine_dir / "include" / "constants" / "tms_hms.h"
+    if not tms_hms.is_file():
+        return "ITEM_HM_FLASH"
+    source = tms_hms.read_text(encoding="utf-8")
+    tm_section = source.split("#define FOREACH_TM(F)", 1)[-1].split("#define FOREACH_HM(F)", 1)[0]
+    hm_section = source.split("#define FOREACH_HM(F)", 1)[-1].split("#define FOREACH_TMHM(F)", 1)[0]
+    if "F(FLASH)" in hm_section:
+        return "ITEM_HM_FLASH"
+    if "F(FLASH)" in tm_section:
+        return "ITEM_TM_FLASH"
+    raise SystemExit("Flash is not listed as either a TM or HM in the engine item data")
+
+
 def integrate(engine_dir: Path) -> None:
     field_path = engine_dir / "src" / "field_move.c"
     party_path = engine_dir / "src" / "party_menu.c"
-    field_path.write_text(patch_field_move(field_path.read_text(encoding="utf-8")), encoding="utf-8")
-    party_path.write_text(patch_party_menu(party_path.read_text(encoding="utf-8")), encoding="utf-8")
+    flash_item = resolve_flash_item(engine_dir)
+    field_path.write_text(patch_field_move(field_path.read_text(encoding="utf-8"), flash_item), encoding="utf-8")
+    party_path.write_text(patch_party_menu(party_path.read_text(encoding="utf-8"), flash_item), encoding="utf-8")
 
 
 def main() -> None:
