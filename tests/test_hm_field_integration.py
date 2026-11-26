@@ -60,12 +60,12 @@ def test_platinum_flash_resolves_to_tm_instead_of_nonexistent_hm(tmp_path):
         "    FOREACH_TM(F) \\",
         "    FOREACH_HM(F)",
     ]
-    (include / "tms_hms.h").write_text("\\n".join(lines) + "\\n", encoding="utf-8")
+    (include / "tms_hms.h").write_text("\n".join(lines) + "\n", encoding="utf-8")
     assert resolve_flash_item(tmp_path) == "ITEM_TM_FLASH"
 
 
 def test_sinnoh_flash_overlay_uses_tm_item_constant():
-    source = '#include "global.h"\\n' + FIELD_OLD + '\\n.isUnlockedFunc = HasBadgeForFieldMove,'
+    source = '#include "global.h"\n' + FIELD_OLD + '\n.isUnlockedFunc = HasBadgeForFieldMove,'
     patched = patch_field_move(source, flash_item="ITEM_TM_FLASH")
     assert "FIELD_MOVE_FLASH: return ITEM_TM_FLASH" in patched
     assert "FIELD_MOVE_FLASH: return ITEM_HM_FLASH" not in patched
