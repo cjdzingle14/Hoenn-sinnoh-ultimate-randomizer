@@ -1,0 +1,27 @@
+{
+  "schema_version": 2,
+  "status": "native_engine_maps_verified_runtime_region_selector_pending",
+  "engine_repository": "https://github.com/LiderMorti00/Sinnoh-pokeemerald-expansion",
+  "engine_revision": "dd06b332cc5170920dc0be923337dafb7080f327",
+  "region": "sinnoh",
+  "start_map": "MAP_TWINLEAF_TOWN_MAIN_HOUSE_2F",
+  "maps": [
+    {"source": "TwinleafTown_MainHouse_2F", "id": "MAP_TWINLEAF_TOWN_MAIN_HOUSE_2F", "role": "new_game_start", "connections": [], "warps": ["MAP_TWINLEAF_TOWN_MAIN_HOUSE_1F"]},
+    {"source": "TwinleafTown_MainHouse_1F", "id": "MAP_TWINLEAF_TOWN_MAIN_HOUSE_1F", "role": "player_home", "connections": [], "warps": ["MAP_TWINLEAF_TOWN", "MAP_TWINLEAF_TOWN_MAIN_HOUSE_2F"]},
+    {"source": "TwinleafTown", "id": "MAP_TWINLEAF_TOWN", "role": "starting_village", "connections": ["MAP_ROUTE201", "MAP_ROUTE220"], "warps": ["MAP_TWINLEAF_TOWN_MAIN_HOUSE_1F", "MAP_TWINLEAF_TOWN_RIVALS_HOUSE_F1", "MAP_TWINLEAF_TOWN_HAOUSE1", "MAP_TWINLEAF_TOWN_HOUSE2"]},
+    {"source": "Route201", "id": "MAP_ROUTE201", "role": "first_route", "connections": ["MAP_TWINLEAF_TOWN", "MAP_SANDGEM_TOWN", "MAP_VERITY_LAKEFRONT"], "warps": []},
+    {"source": "SandgemTown", "id": "MAP_SANDGEM_TOWN", "role": "first_research_town", "connections": ["MAP_ROUTE201"], "warps": ["MAP_SANDGEM_TOWN_RIVAL_HOUSE_F1", "MAP_SANDGEM_TOWN_HOUSE1", "MAP_SANDGEM_TOWN_POKEMON_CENTER_1F", "MAP_SANDGEM_TOWN_MART"]}
+  ],
+  "hoenn_start": {
+    "source": "LittlerootTown_BrendansHouse_2F",
+    "id": "MAP_LITTLEROOT_TOWN_BRENDANS_HOUSE_2F",
+    "preserve_existing": true
+  },
+  "runtime_region_selector": {
+    "implemented": false,
+    "required_choices": ["hoenn", "sinnoh"],
+    "default": "hoenn",
+    "sinnoh_destination": "MAP_TWINLEAF_TOWN_MAIN_HOUSE_2F",
+    "hoenn_destination": "MAP_LITTLEROOT_TOWN_BRENDANS_HOUSE_2F"
+  }
+}
