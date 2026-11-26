@@ -26,11 +26,11 @@ def test_region_selector_patches_engine_and_is_idempotent(tmp_path: Path) -> Non
         "static void Task_HandleMainMenuAPressed(u8 taskId);\n"
         "static void Task_NewGameBirchSpeech_Init(u8 taskId);\n"
         "static void Task_HandleMainMenuAPressed(u8 taskId)\n{\n"
-        "    // Proyecto Sinnoh: intro del Prof. Serbal en lugar del discurso de Abedul\n"
-        "    DestroyTask(taskId);\n"
-        "    StartRowanIntro();\n"
-        "    return;\n"
-        "    break;\n}\n"
+        "            // Proyecto Sinnoh: intro del Prof. Serbal en lugar del discurso de Abedul\n"
+        "            DestroyTask(taskId);\n"
+        "            StartRowanIntro();\n"
+        "            return;\n"
+        "            break;\n}\n"
         "static void Task_HandleMainMenuBPressed(u8 taskId)\n{\n}\n",
         encoding="utf-8",
     )
