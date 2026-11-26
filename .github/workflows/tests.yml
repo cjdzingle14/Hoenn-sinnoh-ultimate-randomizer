@@ -12,13 +12,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          submodules: recursive
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
       - run: python -m pip install --upgrade pip pytest
       - run: python -m pytest -q
-      - name: Validate planned Sinnoh world graph
+      - name: Validate logical Sinnoh world graph
         run: python -m tools.validate_sinnoh_world
+      - name: Validate native Sinnoh maps against pinned GBA engine
+        run: python -m tools.validate_sinnoh_engine_maps
 
   engine-custom:
     runs-on: ubuntu-24.04
@@ -55,10 +59,10 @@ jobs:
         run: make -j2
       - name: Validate standard GBA header for emulator compatibility
         run: python -m tools.validate_gba_rom vendor/pokeemerald-expansion/pokeemerald.gba
-      - name: Upload custom per-playthrough starter ROM
+      - name: Upload custom project ROM
         uses: actions/upload-artifact@v4
         with:
-          name: hoenn-sinnoh-test-build
+          name: hoenn-sinnoh-sinnoh-engine-test
           path: vendor/pokeemerald-expansion/pokeemerald.gba
           if-no-files-found: error
           retention-days: 14
