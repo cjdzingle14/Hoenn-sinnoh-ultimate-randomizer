@@ -51,10 +51,16 @@ def test_platinum_flash_resolves_to_tm_instead_of_nonexistent_hm(tmp_path):
 
     include = tmp_path / "include" / "constants"
     include.mkdir(parents=True)
-    (include / "tms_hms.h").write_text(
-        "#define FOREACH_TM(F) \\\n    F(FLASH) \\\n#define FOREACH_HM(F) \\\n    F(DEFOG) \\\n#define FOREACH_TMHM(F) \\\n    FOREACH_TM(F) \\\n    FOREACH_HM(F)\n",
-        encoding="utf-8",
-    )
+    lines = [
+        "#define FOREACH_TM(F) \\",
+        "    F(FLASH) \\",
+        "#define FOREACH_HM(F) \\",
+        "    F(DEFOG) \\",
+        "#define FOREACH_TMHM(F) \\",
+        "    FOREACH_TM(F) \\",
+        "    FOREACH_HM(F)",
+    ]
+    (include / "tms_hms.h").write_text("\\n".join(lines) + "\\n", encoding="utf-8")
     assert resolve_flash_item(tmp_path) == "ITEM_TM_FLASH"
 
 
