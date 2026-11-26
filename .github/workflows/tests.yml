@@ -2,9 +2,9 @@ name: Project tests and custom engine build
 
 on:
   push:
-    branches: [main]
+    branches: [main, feature/sinnoh-expansion-base]
   pull_request:
-    branches: [main]
+    branches: [main, feature/sinnoh-expansion-base]
   workflow_dispatch:
 
 jobs:
