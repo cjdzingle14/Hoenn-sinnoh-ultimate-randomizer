@@ -1,4 +1,4 @@
-"""Apply the Hoenn/Sinnoh new-game start selector to the pinned engine."""
+"""Apply a new-game Hoenn/Sinnoh choice to the pinned Sinnoh-capable engine."""
 
 from __future__ import annotations
 
@@ -11,17 +11,8 @@ def replace_once(path: Path, old: str, new: str) -> None:
     if new in content:
         return
     if old not in content:
-        raise SystemExit(f"Expected integration anchor not found in {path}: {old[:90]!r}")
+        raise SystemExit(f"Expected integration anchor not found in {path}: {old[:100]!r}")
     path.write_text(content.replace(old, new, 1), encoding="utf-8")
-
-
-def insert_before_once(path: Path, anchor: str, insertion: str) -> None:
-    content = path.read_text(encoding="utf-8")
-    if insertion.strip() in content:
-        return
-    if anchor not in content:
-        raise SystemExit(f"Expected insertion anchor not found in {path}: {anchor[:90]!r}")
-    path.write_text(content.replace(anchor, insertion + anchor, 1), encoding="utf-8")
 
 
 def integrate(engine_dir: Path) -> None:
@@ -73,13 +64,13 @@ EWRAM_DATA u8 gNewGameStartRegion = NEW_GAME_START_REGION_HOENN;""",
         main_menu,
         "static u8 sBirchSpeechMainTaskId;\n",
         """static u8 sBirchSpeechMainTaskId;
-static const u8 sText_ChooseStartingRegion[] = _("Choose region: A = SINNOH, B = HOENN");
+static const u8 sText_ChooseStartingRegion[] = _("A: SINNOH    B: HOENN");
 """,
     )
     replace_once(
         main_menu,
-        "static void Task_HandleMainMenuAPressed(u8 taskId);\n",
-        "static void Task_HandleMainMenuAPressed(u8 taskId);\nstatic void Task_ChooseStartingRegion(u8 taskId);\n",
+        "static void Task_HandleMainMenuAPressed(u8);\n",
+        "static void Task_HandleMainMenuAPressed(u8);\nstatic void Task_ChooseStartingRegion(u8);\n",
     )
     replace_once(
         main_menu,
@@ -93,7 +84,7 @@ static const u8 sText_ChooseStartingRegion[] = _("Choose region: A = SINNOH, B =
             return;
             break;""",
     )
-    insert_before_once(
+    replace_once(
         main_menu,
         "static void Task_HandleMainMenuBPressed(u8 taskId)\n{",
         """static void Task_ChooseStartingRegion(u8 taskId)
@@ -109,11 +100,12 @@ static const u8 sText_ChooseStartingRegion[] = _("Choose region: A = SINNOH, B =
     {
         PlaySE(SE_SELECT);
         gNewGameStartRegion = NEW_GAME_START_REGION_HOENN;
-        gTasks[taskId].func = Task_NewGameBirchSpeech_Init;
+        Task_NewGameBirchSpeech_Init(taskId);
     }
 }
 
-""",
+static void Task_HandleMainMenuBPressed(u8 taskId)
+{""",
     )
 
 
@@ -122,7 +114,7 @@ def main() -> None:
     parser.add_argument("--engine-dir", type=Path, required=True)
     args = parser.parse_args()
     integrate(args.engine_dir)
-    print("New-game region selector integrated: A = Sinnoh, B = Hoenn")
+    print("New-game region choice integrated: A = Sinnoh, B = Hoenn")
 
 
 if __name__ == "__main__":
