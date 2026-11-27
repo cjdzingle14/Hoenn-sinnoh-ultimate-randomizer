@@ -36,6 +36,8 @@ jobs:
           sudo apt-get install -y build-essential binutils-arm-none-eabi gcc-arm-none-eabi libnewlib-arm-none-eabi git libpng-dev python3
       - name: Validate native Sinnoh opening maps
         run: python -m tools.validate_sinnoh_maps --engine-dir vendor/pokeemerald-expansion
+      - name: Normalize Sinnoh hidden-item operands for assembler
+        run: python -m tools.patch_sinnoh_hidden_items --engine-dir vendor/pokeemerald-expansion
       - name: Add new-game Hoenn/Sinnoh region selector
         run: python -m tools.integrate_region_selector --engine-dir vendor/pokeemerald-expansion
       - name: Record pinned engine revision
