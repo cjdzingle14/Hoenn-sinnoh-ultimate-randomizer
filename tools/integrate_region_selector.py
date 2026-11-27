@@ -114,8 +114,7 @@ static const u8 sText_ChooseStartingRegion[] = _("A: SINNOH    B: HOENN");
     }
 }
 
-static void Task_HandleMainMenuBPressed(u8 taskId)
-{""",
+static void Task_HandleMainMenuBPressed(u8 taskId)""",
     )
 
 
