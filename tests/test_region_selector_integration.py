@@ -53,3 +53,7 @@ def test_region_selector_patches_engine_and_is_idempotent(tmp_path: Path) -> Non
     assert main_menu.count("static void Task_ChooseStartingRegion(u8);") == 1
     assert main_menu.count("static void Task_ChooseStartingRegion(u8 taskId)") == 1
     assert "IsTextPrinterActiveOnWindow(7)" in main_menu
+    assert "BeginNormalPaletteFade(PALETTES_ALL, 0, 16, 0, RGB_BLACK)" in main_menu
+    assert "RunTextPrinters();" in main_menu
+    assert "FillBgTilemapBufferRect_Palette0(0, 0, 0, 0, DISPLAY_TILE_WIDTH, DISPLAY_TILE_HEIGHT);" in main_menu
+    assert "FreeAllWindowBuffers();\n            Task_NewGameBirchSpeech_Init(taskId);" in main_menu
