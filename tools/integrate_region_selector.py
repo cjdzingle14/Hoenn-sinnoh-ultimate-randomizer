@@ -79,9 +79,13 @@ static const u8 sText_ChooseStartingRegion[] = _("A: SINNOH    B: HOENN");
             StartRowanIntro();
             return;
             break;""",
-        """            CreateMainMenuErrorWindow(sText_ChooseStartingRegion);
-            gTasks[taskId].data[0] = 0;
+        """            gTasks[taskId].data[0] = 0;
             gTasks[taskId].func = Task_ChooseStartingRegion;
+            gPlttBufferUnfaded[BG_PLTT_ID(15) + 1] = RGB_WHITE;
+            gPlttBufferFaded[BG_PLTT_ID(15) + 1] = RGB_WHITE;
+            SetGpuReg(REG_OFFSET_WIN0H, 0);
+            SetGpuReg(REG_OFFSET_WIN0V, 0);
+            BeginNormalPaletteFade(PALETTES_ALL, 0, 16, 0, RGB_BLACK);
             return;
             break;""",
     )
@@ -90,27 +94,36 @@ static const u8 sText_ChooseStartingRegion[] = _("A: SINNOH    B: HOENN");
         "static void Task_HandleMainMenuBPressed(u8 taskId)",
         """static void Task_ChooseStartingRegion(u8 taskId)
 {
-    // Let the prompt finish printing before accepting the A/B choice.
-    if (gTasks[taskId].data[0] == 0)
+    switch (gTasks[taskId].data[0])
     {
-        gTasks[taskId].data[0] = 1;
-        return;
-    }
-    if (IsTextPrinterActiveOnWindow(7))
-        return;
-
-    if (JOY_NEW(A_BUTTON))
-    {
-        PlaySE(SE_SELECT);
-        gNewGameStartRegion = NEW_GAME_START_REGION_SINNOH;
-        DestroyTask(taskId);
-        StartRowanIntro();
-    }
-    else if (JOY_NEW(B_BUTTON))
-    {
-        PlaySE(SE_SELECT);
-        gNewGameStartRegion = NEW_GAME_START_REGION_HOENN;
-        Task_NewGameBirchSpeech_Init(taskId);
+    case 0:
+        FillBgTilemapBufferRect_Palette0(0, 0, 0, 0, DISPLAY_TILE_WIDTH, DISPLAY_TILE_HEIGHT);
+        CreateMainMenuErrorWindow(sText_ChooseStartingRegion);
+        gTasks[taskId].data[0]++;
+        break;
+    case 1:
+        if (!gPaletteFade.active)
+            gTasks[taskId].data[0]++;
+        break;
+    case 2:
+        RunTextPrinters();
+        if (IsTextPrinterActiveOnWindow(7))
+            break;
+        if (JOY_NEW(A_BUTTON))
+        {
+            PlaySE(SE_SELECT);
+            gNewGameStartRegion = NEW_GAME_START_REGION_SINNOH;
+            DestroyTask(taskId);
+            StartRowanIntro();
+        }
+        else if (JOY_NEW(B_BUTTON))
+        {
+            PlaySE(SE_SELECT);
+            gNewGameStartRegion = NEW_GAME_START_REGION_HOENN;
+            FreeAllWindowBuffers();
+            Task_NewGameBirchSpeech_Init(taskId);
+        }
+        break;
     }
 }
 
