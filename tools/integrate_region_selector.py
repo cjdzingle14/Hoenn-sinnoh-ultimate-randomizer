@@ -80,15 +80,25 @@ static const u8 sText_ChooseStartingRegion[] = _("A: SINNOH    B: HOENN");
             return;
             break;""",
         """            CreateMainMenuErrorWindow(sText_ChooseStartingRegion);
+            gTasks[taskId].data[0] = 0;
             gTasks[taskId].func = Task_ChooseStartingRegion;
             return;
             break;""",
     )
     replace_once(
         main_menu,
-        "static void Task_HandleMainMenuBPressed(u8 taskId)\n{",
+        "static void Task_HandleMainMenuBPressed(u8 taskId)\\n{",
         """static void Task_ChooseStartingRegion(u8 taskId)
 {
+    // Let the prompt finish printing before accepting the A/B choice.
+    if (gTasks[taskId].data[0] == 0)
+    {
+        gTasks[taskId].data[0] = 1;
+        return;
+    }
+    if (IsTextPrinterActiveOnWindow(7))
+        return;
+
     if (JOY_NEW(A_BUTTON))
     {
         PlaySE(SE_SELECT);
