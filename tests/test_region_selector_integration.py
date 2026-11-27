@@ -23,8 +23,8 @@ def test_region_selector_patches_engine_and_is_idempotent(tmp_path: Path) -> Non
     (engine / "src" / "main_menu.c").write_text(
         '#include "main.h"\n'
         "static u8 sBirchSpeechMainTaskId;\n"
-        "static void Task_HandleMainMenuAPressed(u8 taskId);\n"
-        "static void Task_NewGameBirchSpeech_Init(u8 taskId);\n"
+        "static void Task_HandleMainMenuAPressed(u8);\n"
+        "static void Task_NewGameBirchSpeech_Init(u8);\n"
         "static void Task_HandleMainMenuAPressed(u8 taskId)\n{\n"
         "            // Proyecto Sinnoh: intro del Prof. Serbal en lugar del discurso de Abedul\n"
         "            DestroyTask(taskId);\n"
@@ -50,4 +50,6 @@ def test_region_selector_patches_engine_and_is_idempotent(tmp_path: Path) -> Non
     assert "gNewGameStartRegion = NEW_GAME_START_REGION_SINNOH" in main_menu
     assert "gNewGameStartRegion = NEW_GAME_START_REGION_HOENN" in main_menu
     assert "Task_NewGameBirchSpeech_Init" in main_menu
-    assert main_menu.count("static void Task_ChooseStartingRegion(u8 taskId)") == 2
+    assert main_menu.count("static void Task_ChooseStartingRegion(u8);") == 1
+    assert main_menu.count("static void Task_ChooseStartingRegion(u8 taskId)") == 1
+    assert "IsTextPrinterActiveOnWindow(7)" in main_menu
