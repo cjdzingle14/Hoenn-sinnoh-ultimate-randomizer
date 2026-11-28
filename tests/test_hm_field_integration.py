@@ -44,3 +44,28 @@ def test_all_eight_hms_map_to_their_matching_items():
     for mapping in expected:
         assert mapping in FIELD_NEW
         assert mapping in PARTY_NEW
+
+
+def test_platinum_flash_resolves_to_tm_instead_of_nonexistent_hm(tmp_path):
+    from tools.integrate_hm_field import resolve_flash_item
+
+    include = tmp_path / "include" / "constants"
+    include.mkdir(parents=True)
+    lines = [
+        "#define FOREACH_TM(F) \\",
+        "    F(FLASH) \\",
+        "#define FOREACH_HM(F) \\",
+        "    F(DEFOG) \\",
+        "#define FOREACH_TMHM(F) \\",
+        "    FOREACH_TM(F) \\",
+        "    FOREACH_HM(F)",
+    ]
+    (include / "tms_hms.h").write_text("\n".join(lines) + "\n", encoding="utf-8")
+    assert resolve_flash_item(tmp_path) == "ITEM_TM_FLASH"
+
+
+def test_sinnoh_flash_overlay_uses_tm_item_constant():
+    source = '#include "global.h"\n' + FIELD_OLD + '\n.isUnlockedFunc = HasBadgeForFieldMove,'
+    patched = patch_field_move(source, flash_item="ITEM_TM_FLASH")
+    assert "FIELD_MOVE_FLASH: return ITEM_TM_FLASH" in patched
+    assert "FIELD_MOVE_FLASH: return ITEM_HM_FLASH" not in patched

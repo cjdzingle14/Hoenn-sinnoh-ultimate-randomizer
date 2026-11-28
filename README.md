@@ -1,45 +1,35 @@
 # Hoenn–Sinnoh Ultimate Randomizer
 
-A custom Pokémon GBA ROM-hack project targeting one adventure with both Hoenn and Sinnoh, using [RHH's pokeemerald-expansion](https://github.com/rh-hideout/pokeemerald-expansion).
+A custom Pokémon GBA ROM-hack project targeting one adventure with both Hoenn and Sinnoh, using an Emerald-engine foundation.
 
 ## Agreed direction
 
 - Hoenn and Sinnoh open from the beginning.
+- A new-game choice selects Hoenn (Littleroot) or Sinnoh (Twinleaf).
 - Gym leaders and major battles scale with global progress.
-- Three distinct starter species are selected from the eligible non-Legendary pool at runtime for each new game; the selected Pokémon remains part of that save.
+- Three distinct starter species are selected at runtime for each new game.
 - Legendary Pokémon can be assigned to eligible encounter slots across both regions.
-- Mega Evolution uses support from the pinned engine revision.
-- Pokédex coverage targets species and forms supported by that engine revision.
-- Optional secret Hidden Grottos across both regions contain seeded Ultra Beast encounters, rare items, or empty discoveries.
+- Optional Hidden Grottos across both regions contain Ultra Beasts, rare items, or empty discoveries.
 
-## Current implementation
+## Sinnoh engine foundation
 
-The project applies engine source overlays during CI before compiling the ROM. The starter overlay selects three distinct eligible species at runtime for each new game. The build also integrates runtime wild/trainer randomization, reusable TMs, HM item-based field move access, a rival Poké Ball gift, and streamlined Nurse Joy healing.
+The engine submodule tracks [LiderMorti00's Sinnoh Pokeemerald Expansion](https://github.com/LiderMorti00/Sinnoh-pokeemerald-expansion), pinned to commit `762efac5eda195c59af3962cb39043c899720dc3`.
 
-The graphics pipeline downloads pinned Gen V-style battle sprites at build time, converts them to the engine's existing GBA dimensions and 4bpp palette limits, and applies a restrained overworld tileset palette grade. It preserves the pinned engine submodule and does not commit downloaded sprite artwork.
+The source includes native Emerald-format Sinnoh maps, layouts, events, and story data. The project now validates Twinleaf Town and Route 201 and integrates a new-game selector: press **A** for Sinnoh or **B** for Hoenn. Hoenn retains the original truck opening; Sinnoh uses the Twinleaf opening and Rowan intro.
 
-This is **not yet the completed two-region game**. Sinnoh maps and travel, live gym scaling, legendary placement, and Hidden Grotto map/event integration still need engine integration.
+The selector and combined build still require automated compilation and emulator testing before the game can be called playable. Credit the original source author and contributors. Do not commit commercial ROMs or compiled copyrighted game images.
 
 ## Tests and build
 
-Requires Python 3.10 or newer.
-
-\`\`\`bash
+```bash
 python -m pip install pytest Pillow
 python -m pytest -q
-python -m tools.integrate_starters --engine-dir vendor/pokeemerald-expansion
+python -m tools.validate_sinnoh_maps --engine-dir vendor/pokeemerald-expansion
+python -m tools.integrate_region_selector --engine-dir vendor/pokeemerald-expansion
 make -C vendor/pokeemerald-expansion -j2
-\`\`\`
+```
 
-GitHub Actions applies the graphics and gameplay overlays, builds the custom ROM, validates its GBA header, and uploads a test artifact.
-
-## Principles
-
-- Seeded subsystems remain reproducible where configured; starter choices are randomized at runtime for each new save.
-- Independent PRNG streams keep unrelated systems stable.
-- Validate settings and engine targets before changing game data.
-- Do not assume every modern feature fits GBA memory or ROM layout.
-- Do not distribute copyrighted ROMs or proprietary assets.
+Graphics smoothing and palette-polish stages are intentionally disabled.
 
 ## Documentation
 
@@ -47,6 +37,4 @@ GitHub Actions applies the graphics and gameplay overlays, builds the custom ROM
 - [Starter game design](docs/GAME_DESIGN.md)
 - [Implementation plan](docs/IMPLEMENTATION_PLAN.md)
 - [Secret Grotto & Ultra Beast spoiler guide](docs/SECRET_GROTTO_GUIDE.md)
-- [Upstream engine pin and build status](docs/UPSTREAM.md)
-- [Sprite polish and display pipeline](docs/SPRITE_POLISH.md)
-- [HD-inspired overworld palette pass](docs/OVERWORLD_POLISH.md)
+- [Sinnoh engine source and build status](docs/UPSTREAM.md)
