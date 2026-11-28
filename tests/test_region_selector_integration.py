@@ -70,7 +70,7 @@ def test_region_selector_patches_engine_and_is_idempotent(tmp_path: Path) -> Non
     assert "MAP_TWINLEAF_TOWN_MAIN_HOUSE_2F" in new_game
     assert "VarSet(VAR_START_REGION, gNewGameStartRegion);" in new_game
     assert "LittlerootTown_ProfessorBirchsLab_RegionOnTransition" in lab_scripts
-    assert "goto_if_eq VAR_START_REGION, NEW_GAME_START_REGION_SINNOH, SandgemLab_OnTransition" in lab_scripts
+    assert "goto_if_eq VAR_START_REGION, VAR_START_REGION_SINNOH, SandgemLab_OnTransition" in lab_scripts
     assert "goto LittlerootTown_ProfessorBirchsLab_OnTransition" in lab_scripts
     assert "LittlerootTown_ProfessorBirchsLab_RegionOnWarp" in lab_scripts
     assert "LittlerootTown_ProfessorBirchsLab_RegionOnFrame" in lab_scripts
