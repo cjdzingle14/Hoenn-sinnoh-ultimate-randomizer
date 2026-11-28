@@ -32,7 +32,7 @@ extern u8 gNewGameStartRegion;
     replace_once(
         vars_header,
         "#define VAR_UNUSED_0x40E5                                0x40E5 // Unused Var",
-        "#define VAR_UNUSED_0x40E5                                0x40E5 // Unused Var\n#define VAR_START_REGION VAR_UNUSED_0x40E5",
+        "#define VAR_UNUSED_0x40E5                                0x40E5 // Unused Var\n#define VAR_START_REGION VAR_UNUSED_0x40E5\n#define VAR_START_REGION_HOENN 0\n#define VAR_START_REGION_SINNOH 1",
     )
 
     new_game = engine_dir / "src" / "new_game.c"
