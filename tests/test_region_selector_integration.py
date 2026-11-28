@@ -62,6 +62,8 @@ def test_region_selector_patches_engine_and_is_idempotent(tmp_path: Path) -> Non
 
     assert "NEW_GAME_START_REGION_SINNOH" in header
     assert "VAR_START_REGION VAR_UNUSED_0x40E5" in vars_header
+    assert "#define VAR_START_REGION_HOENN 0" in vars_header
+    assert "#define VAR_START_REGION_SINNOH 1" in vars_header
     assert '#include "constants/vars.h"' in new_game
     assert "gNewGameStartRegion = NEW_GAME_START_REGION_HOENN" in new_game
     assert "MAP_INSIDE_OF_TRUCK" in new_game
