@@ -91,16 +91,16 @@ EWRAM_DATA u8 gNewGameStartRegion = NEW_GAME_START_REGION_HOENN;""",
 \t.byte 0
 
 LittlerootTown_ProfessorBirchsLab_RegionOnTransition:
-\tgoto_if_eq VAR_START_REGION, NEW_GAME_START_REGION_SINNOH, SandgemLab_OnTransition
+\tgoto_if_eq VAR_START_REGION, VAR_START_REGION_SINNOH, SandgemLab_OnTransition
 \tgoto LittlerootTown_ProfessorBirchsLab_OnTransition
 \tend
 
 LittlerootTown_ProfessorBirchsLab_RegionOnWarp:
-\tmap_script_2 VAR_START_REGION, NEW_GAME_START_REGION_HOENN, LittlerootTown_ProfessorBirchsLab_OnWarp
+\tmap_script_2 VAR_START_REGION, VAR_START_REGION_HOENN, LittlerootTown_ProfessorBirchsLab_OnWarp
 \t.2byte 0
 
 LittlerootTown_ProfessorBirchsLab_RegionOnFrame:
-\tmap_script_2 VAR_START_REGION, NEW_GAME_START_REGION_HOENN, LittlerootTown_ProfessorBirchsLab_OnFrame
+\tmap_script_2 VAR_START_REGION, VAR_START_REGION_HOENN, LittlerootTown_ProfessorBirchsLab_OnFrame
 \t.2byte 0""",
     )
 
