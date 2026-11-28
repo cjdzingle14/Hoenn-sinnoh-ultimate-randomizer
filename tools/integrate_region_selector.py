@@ -28,7 +28,19 @@ extern u8 gNewGameStartRegion;
 #endif // GUARD_NEW_GAME_H""",
     )
 
+    vars_header = engine_dir / "include" / "constants" / "vars.h"
+    replace_once(
+        vars_header,
+        "#define VAR_UNUSED_0x40E5                                0x40E5 // Unused Var",
+        "#define VAR_UNUSED_0x40E5                                0x40E5 // Unused Var\n#define VAR_START_REGION VAR_UNUSED_0x40E5",
+    )
+
     new_game = engine_dir / "src" / "new_game.c"
+    replace_once(
+        new_game,
+        '#include "constants/items.h"\n',
+        '#include "constants/items.h"\n#include "constants/vars.h"\n',
+    )
     replace_once(
         new_game,
         "EWRAM_DATA bool8 gEnableContestDebugging = FALSE;",
@@ -52,6 +64,44 @@ EWRAM_DATA u8 gNewGameStartRegion = NEW_GAME_START_REGION_HOENN;""",
         SetWarpDestination(MAP_GROUP(MAP_INSIDE_OF_TRUCK), MAP_NUM(MAP_INSIDE_OF_TRUCK), WARP_ID_NONE, -1, -1);
     WarpIntoMap();
 }""",
+    )
+    replace_once(
+        new_game,
+        "    InitEventData();\n",
+        """    InitEventData();
+    // Preserve the menu choice in save-backed event data for map scripts.
+    VarSet(VAR_START_REGION, gNewGameStartRegion);
+""",
+    )
+
+    # The Sinnoh fork replaced Birch's original lab map scripts with Rowan's.
+    # The original Hoenn scripts still exist below as OldHoenn, but were never
+    # connected to the map. Route the lab's transition/warp/frame handlers by
+    # the saved starting-region variable so the two openings cannot cross.
+    birch_lab = engine_dir / "data" / "maps" / "LittlerootTown_ProfessorBirchsLab" / "scripts.inc"
+    replace_once(
+        birch_lab,
+        """LittlerootTown_ProfessorBirchsLab_MapScripts::
+\tmap_script MAP_SCRIPT_ON_TRANSITION, SandgemLab_OnTransition
+\t.byte 0""",
+        """LittlerootTown_ProfessorBirchsLab_MapScripts::
+\tmap_script MAP_SCRIPT_ON_TRANSITION, LittlerootTown_ProfessorBirchsLab_RegionOnTransition
+\tmap_script MAP_SCRIPT_ON_WARP_INTO_MAP_TABLE, LittlerootTown_ProfessorBirchsLab_RegionOnWarp
+\tmap_script MAP_SCRIPT_ON_FRAME_TABLE, LittlerootTown_ProfessorBirchsLab_RegionOnFrame
+\t.byte 0
+
+LittlerootTown_ProfessorBirchsLab_RegionOnTransition:
+\tgoto_if_eq VAR_START_REGION, NEW_GAME_START_REGION_SINNOH, SandgemLab_OnTransition
+\tgoto LittlerootTown_ProfessorBirchsLab_OnTransition
+\tend
+
+LittlerootTown_ProfessorBirchsLab_RegionOnWarp:
+\tmap_script_2 VAR_START_REGION, NEW_GAME_START_REGION_HOENN, LittlerootTown_ProfessorBirchsLab_OnWarp
+\t.2byte 0
+
+LittlerootTown_ProfessorBirchsLab_RegionOnFrame:
+\tmap_script_2 VAR_START_REGION, NEW_GAME_START_REGION_HOENN, LittlerootTown_ProfessorBirchsLab_OnFrame
+\t.2byte 0""",
     )
 
     main_menu = engine_dir / "src" / "main_menu.c"
@@ -136,7 +186,7 @@ def main() -> None:
     parser.add_argument("--engine-dir", type=Path, required=True)
     args = parser.parse_args()
     integrate(args.engine_dir)
-    print("New-game region choice integrated: A = Sinnoh, B = Hoenn")
+    print("Region selector integrated with region-specific Birch/Rowan lab scripts.")
 
 
 if __name__ == "__main__":
